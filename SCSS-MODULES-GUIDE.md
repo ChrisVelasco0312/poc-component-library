@@ -115,10 +115,15 @@ export const YourComponent = ({
 
 ### 4. Index File
 
-Update `src/index.ts`:
+Update `src/index.ts`. This step is crucial for ensuring your component's styles are always included with the component.
 
 ```ts
+// This import is CRUCIAL. It ensures that when Vite builds the component,
+// the styles from the SCSS module are included in the final CSS output.
+// It also makes the styles available when we use source-aliasing for hot-reloading in Storybook.
 import './YourComponent.module.scss';
+
+// Then, export your component and any related types.
 export * from './YourComponent';
 ```
 
@@ -211,70 +216,27 @@ export default defineConfig({
 
 ## Storybook Integration
 
-### 8. Storybook Preview Configuration
+### 8. Handling Styles in Storybook
 
-Add your component CSS to `apps/docs/.storybook/preview.ts`:
+**There are no extra steps.**
 
-```ts
-import type { Preview } from '@storybook/react';
+Because each component package is responsible for importing its own styles (as shown in Step 4), the styles will work automatically in Storybook.
 
-// Auto-import all component CSS files
-import '@poc/button/dist/button.css';
-import '@poc/your-component/dist/your-component.css'; // Add your new component here
-
-const preview: Preview = {
-  parameters: {
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i,
-      },
-    },
-  },
-};
-
-export default preview;
-```
+When Storybook is configured for hot-reloading (by aliasing the package to its source code), Vite processes the component's `index.ts`, sees the `.scss` import, and handles it correctly. You do not need to add any CSS imports to `.storybook/preview.ts`.
 
 ### 9. Stories File
 
-Create `apps/docs/src/stories/YourComponent.stories.tsx`:
+Create `apps/docs/src/stories/YourComponent.stories.tsx` as you normally would. No special style configuration is needed.
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { YourComponent } from '@poc/your-component';
 
-// Note: CSS is automatically imported via Storybook preview config
+// Note: Styles are handled by the component package itself.
 
 const meta = {
   title: 'Components/YourComponent',
-  component: YourComponent,
-  parameters: {
-    layout: 'centered',
-  },
-  tags: ['autodocs'],
-  argTypes: {
-    variant: { control: 'radio', options: ['primary', 'secondary'] },
-    size: { control: 'radio', options: ['small', 'large'] },
-  },
-} satisfies Meta<typeof YourComponent>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Primary: Story = {
-  args: {
-    variant: 'primary',
-    children: 'Primary Component',
-  },
-};
-
-export const Secondary: Story = {
-  args: {
-    variant: 'secondary',
-    children: 'Secondary Component',
-  },
-};
+// ...
 ```
 
 ## Best Practices

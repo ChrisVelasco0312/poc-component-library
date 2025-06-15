@@ -540,47 +540,77 @@ Edit `apps/docs/package.json` to include your component packages and clean up un
   "type": "module",
   "scripts": {
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "lint": "eslint src"
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@your-scope/button": "workspace:*",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@storybook/react": "^9.0.9",
-    "@storybook/react-vite": "^9.0.9",
-    "storybook": "^9.0.9",
+    "@storybook/react": "^8.1.1",
+    "@storybook/react-vite": "^8.1.1",
+    "storybook": "^8.1.1",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
-    "typescript": "~5.8.3"
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8",
+    "globals": "^15.9.0"
   }
 }
 ```
 
-**Step 6: Configure Storybook to Find Local Stories**
+**Step 6: Configure Storybook for Monorepo Hot-Reloading**
 
-Edit `apps/docs/.storybook/main.ts` to look for stories in the docs app:
+This is a **critical** step to ensure that when you edit a component in `packages/`, Storybook instantly updates.
 
-```typescript
-import type { StorybookConfig } from '@storybook/react-vite';
+1.  **Modify `apps/docs/.storybook/main.ts`**:
+    We need to tell Vite to look at our component's *source code*, not its pre-compiled `dist` folder. We do this by creating a resolve alias.
 
-const config: StorybookConfig = {
-  stories: [
-    "../src/stories/*.stories.@(js|jsx|mjs|ts|tsx)"
-  ],
-  addons: [
-    '@storybook/addon-docs',
-    '@storybook/addon-essentials'
-  ],
-  framework: {
-    name: '@storybook/react-vite',
-    options: {},
-  },
-};
-export default config;
-```
+    ```ts
+    // apps/docs/.storybook/main.ts
+    import type { StorybookConfig } from '@storybook/react-vite';
+    import path from 'path'; // Import path
+
+    const config: StorybookConfig = {
+      stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
+      addons: [/* ... */],
+      framework: {
+        name: '@storybook/react-vite',
+        options: {},
+      },
+      // Add this viteFinal config
+      async viteFinal(config) {
+        const { mergeConfig } = await import('vite');
+        return mergeConfig(config, {
+          resolve: {
+            alias: {
+              '@your-scope/button': path.resolve(
+                __dirname,
+                '../../../packages/components/button/src/index.ts'
+              ),
+              // Add a new alias here for every new component
+            },
+          },
+        });
+      },
+    };
+    export default config;
+    ```
+
+2.  **Modify `apps/docs/.storybook/preview.ts`**:
+    Ensure this file does **not** contain any direct CSS imports from component packages. Components are responsible for their own styles.
+
+    ```ts
+    // apps/docs/.storybook/preview.ts
+    import type { Preview } from '@storybook/react-vite';
+
+    const preview: Preview = {
+      parameters: { /* ... */ },
+    };
+
+    export default preview;
+    ```
 
 **Step 7: Create Documentation Content**
 
@@ -604,20 +634,18 @@ export default config;
 
 2. **Create Button Stories** (`apps/docs/src/stories/Button.stories.tsx`):
    ```tsx
-   import type { Meta, StoryObj } from '@storybook/react';
+   import type { Meta, StoryObj } from '@storybook/react-vite';
    import { Button } from '@your-scope/button';
 
-   const meta = {
+   const meta: Meta<typeof Button> = {
      title: 'Components/Button',
      component: Button,
-     parameters: {
-       layout: 'centered',
-     },
+     parameters: { layout: 'centered' },
      tags: ['autodocs'],
      argTypes: {
        variant: { control: 'radio', options: ['primary', 'secondary'] },
      },
-   } satisfies Meta<typeof Button>;
+   };
 
    export default meta;
    type Story = StoryObj<typeof meta>;
@@ -633,22 +661,6 @@ export default config;
      args: {
        variant: 'secondary',
        children: 'Secondary Button',
-     },
-   };
-
-   export const WithClickHandler: Story = {
-     args: {
-       variant: 'primary',
-       children: 'Click me!',
-       onClick: () => alert('Button clicked!'),
-     },
-   };
-
-   export const Disabled: Story = {
-     args: {
-       variant: 'primary',
-       children: 'Disabled Button',
-       disabled: true,
      },
    };
    ```
@@ -668,94 +680,169 @@ Open `http://localhost:6006` in your browser. You should see your centralized co
 
 ---
 
-### **Phase 4: Preparing for Private Publishing on GitHub**
+### **Phase 4: Setting Up the Documentation App**
 
-Now let's configure everything to publish to the private GitHub Packages registry.
+This is where we'll use Storybook to see and test our components.
 
-**Step 1: Configure `.npmrc`**
-
-In the **root** of your project, create an `.npmrc` file. This tells pnpm to associate your scope with GitHub's registry.
-
+**Step 1: Create a Vite React App for Docs**
+```bash
+# From the root of the project
+cd apps
+# Create a React + TypeScript app using Vite
+pnpm create vite docs --template react-ts
+# Enter the new directory
+cd docs
 ```
-# .npmrc
-@your-scope:registry=https://npm.pkg.github.com/
+This will create a `docs` app with its own `package.json`.
+
+**Step 2: Install Storybook**
+Inside `apps/docs`, run the Storybook initializer:
+```bash
+npx storybook@latest init
 ```
-**REPLACE `@your-scope` with your GitHub username/organization!**
+When prompted, select `Vite` as the builder. This will install all necessary Storybook dependencies and create a `.storybook` directory.
 
-**Step 2: Update `package.json` for Publishing**
+**Step 3: Clean Up and Configure the Docs App**
+Let's adjust the `docs` package to be a pure documentation app.
 
-Go to `packages/components/button/package.json` and add the `publishConfig` and `repository` fields.
+1.  **Modify `apps/docs/package.json`**:
+    Add your `@your-scope/button` as a dependency. We also need `vite` and `globals` for our Storybook configuration.
 
-```json
-// packages/components/button/package.json
-{
-  // ... all the other fields
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/your-scope/poc-component-library.git",
-    "directory": "packages/components/button"
+    ```json
+    {
+      "name": "docs",
+      "private": true,
+      "version": "0.0.0",
+      "type": "module",
+      "scripts": {
+        "storybook": "storybook dev -p 6006",
+        "build-storybook": "storybook build"
+      },
+      "dependencies": {
+        "@your-scope/button": "workspace:*",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+      },
+      "devDependencies": {
+        "@storybook/react": "^8.1.1",
+        "@storybook/react-vite": "^8.1.1",
+        "storybook": "^8.1.1",
+        "@types/react": "^19.1.0",
+        "@types/react-dom": "^19.1.0",
+        "typescript": "^5.2.2",
+        "vite": "^5.0.8",
+        "globals": "^15.9.0"
+      }
+    }
+    ```
+    *Run `pnpm install` in the `docs` directory after saving.*
+
+2.  **Delete Unnecessary Files**:
+    You can delete everything inside `apps/docs/src`. We will create our stories there.
+
+**Step 4: Configure Storybook for Monorepo Hot-Reloading**
+
+This is a **critical** step to ensure that when you edit a component in `packages/`, Storybook instantly updates.
+
+1.  **Modify `apps/docs/.storybook/main.ts`**:
+    We need to tell Vite to look at our component's *source code*, not its pre-compiled `dist` folder. We do this by creating a resolve alias.
+
+    ```ts
+    // apps/docs/.storybook/main.ts
+    import type { StorybookConfig } from '@storybook/react-vite';
+    import path from 'path'; // Import path
+
+    const config: StorybookConfig = {
+      stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
+      addons: [/* ... */],
+      framework: {
+        name: '@storybook/react-vite',
+        options: {},
+      },
+      // Add this viteFinal config
+      async viteFinal(config) {
+        const { mergeConfig } = await import('vite');
+        return mergeConfig(config, {
+          resolve: {
+            alias: {
+              '@your-scope/button': path.resolve(
+                __dirname,
+                '../../../packages/components/button/src/index.ts'
+              ),
+              // Add a new alias here for every new component
+            },
+          },
+        });
+      },
+    };
+    export default config;
+    ```
+
+2.  **Modify `apps/docs/.storybook/preview.ts`**:
+    Ensure this file does **not** contain any direct CSS imports from component packages. Components are responsible for their own styles.
+
+    ```ts
+    // apps/docs/.storybook/preview.ts
+    import type { Preview } from '@storybook/react-vite';
+
+    const preview: Preview = {
+      parameters: { /* ... */ },
+    };
+
+    export default preview;
+    ```
+
+**Step 5: Create the Button Story**
+
+Now let's create the actual story file to display our button.
+
+Create `apps/docs/src/stories/Button.stories.tsx`:
+
+```tsx
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Button } from '@your-scope/button';
+
+const meta: Meta<typeof Button> = {
+  title: 'Components/Button',
+  component: Button,
+  parameters: { layout: 'centered' },
+  tags: ['autodocs'],
+  argTypes: {
+    variant: { control: 'radio', options: ['primary', 'secondary'] },
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  }
-}
+};
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Primary: Story = {
+  args: {
+    variant: 'primary',
+    children: 'Primary Button',
+  },
+};
+
+export const Secondary: Story = {
+  args: {
+    variant: 'secondary',
+    children: 'Secondary Button',
+  },
+};
 ```
-*   Replace `your-scope` and `poc-component-library` with your actual GitHub username and repository name.
-*   You must create a repository on GitHub for this to work. Go to GitHub and create an empty repository named `poc-component-library`.
-
-**Step 3: Generate a Personal Access Token (PAT)**
-
-1.  Go to GitHub > Settings > Developer settings > Personal access tokens > **Tokens (classic)**.
-2.  Click "Generate new token".
-3.  Give it a name (e.g., "poc-library-publish").
-4.  Set an expiration date.
-5.  Select the **`write:packages`** scope. This is the only permission it needs.
-6.  Click "Generate token" and **copy the token immediately**. You won't see it again.
+*Note the import from `@storybook/react-vite`, which is required by the linter.*
 
 ---
 
-### **Phase 5: Publishing the Package**
+### **Phase 5: Running and Verifying**
 
-We'll do a manual publish from your machine to prove it works.
+This is the final test. Let's install and use our button in a brand new, separate project.
 
-**Step 1: Commit Your Work**
-
-**Important: Configure git user first if not already done:**
-
-```bash
-git config user.name "Your Name"
-git config user.email "your.email@example.com"
-```
-
-```bash
-# Add the remote origin for your repo
-git remote add origin https://github.com/your-scope/poc-component-library.git
-
-# Stage and commit all your files (properly excluding node_modules thanks to .gitignore)
-git add .
-git commit -m "feat: initial project setup with centralized documentation"
-```
-
-**Step 2: Authenticate and Publish**
-
-1.  **Set the token as an environment variable in your terminal.** This is more secure than putting it in the `.npmrc` file.
-
+1.  **Create a test app outside your library project:**
     ```bash
-    # Replace the placeholder with your actual token
-    export NPM_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    cd .. # Go up one level from your library folder
+    npx create-next-app@latest test-consumer-app --ts --eslint --tailwind --app --src-dir --import-alias "@/*"
+    cd test-consumer-app
     ```
-
-2.  **Publish the package!**
-    From the root of your project, run the publish command specifically for the button package. You need to bump the version from `0.0.0` first. Manually change the version in `packages/components/button/package.json` to `"0.0.1"`.
-
-    ```bash
-    # Now, run the publish command
-    pnpm publish --filter @your-scope/button
-    ```
-
-If everything is configured correctly, pnpm will build your package and upload it to GitHub Packages. You can verify this by going to your repository on GitHub and looking for the "Packages" section on the right-hand side.
-
----
 
 ### **Phase 6: Using Your Private Package**
 
@@ -767,80 +854,3 @@ This is the final test. Let's install and use our button in a brand new, separat
     npx create-next-app@latest test-consumer-app --ts --eslint --tailwind --app --src-dir --import-alias "@/*"
     cd test-consumer-app
     ```
-
-2.  **Configure `.npmrc` in the new app:**
-    Just like before, create an `.npmrc` file in the root of `test-consumer-app`:
-    ```
-    @your-scope:registry=https://npm.pkg.github.com/
-    //npm.pkg.github.com/:_authToken=${NPM_TOKEN}
-    ```
-    *This time we add the `_authToken` line so that `pnpm install` can authenticate automatically.*
-
-3.  **Set the auth token** in your terminal again (if you closed it):
-    `export NPM_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
-
-4.  **Install your button!**
-    ```bash
-    pnpm add @your-scope/button
-    ```
-    pnpm will now pull the package from your private GitHub Packages registry.
-
-5.  **Use the component:**
-    Open `src/app/page.tsx` in the new Next.js app, import your button, and use it.
-
-    ```tsx
-    import { Button } from '@your-scope/button'; // Your private package!
-
-    export default function Home() {
-      return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
-          <h1 className="text-4xl">Welcome to our Test App!</h1>
-          
-          <div className="flex gap-4">
-            <Button variant="primary" onClick={() => alert('Hello Primary!')}>
-              My Library Button
-            </Button>
-            <Button variant="secondary" onClick={() => alert('Hello Secondary!')}>
-              Another Button
-            </Button>
-          </div>
-        </main>
-      )
-    }
-    ```
-
-6.  **Run the app:**
-    `pnpm dev`
-
-Visit `http://localhost:3000`. You will see your custom buttons, served from your private package, rendered in a completely separate application.
-
----
-
-## **Key Lessons Learned & Important Notes**
-
-### **Critical Issues Fixed in This Guide:**
-
-1. **Centralized Documentation Strategy:** Stories live in docs app, not component packages
-2. **ESLint v9 Flat Config:** Modern ESLint requires the new flat config format, not .eslintrc
-3. **Turborepo Version Compatibility:** Use `tasks` instead of `pipeline`, add `packageManager` field
-4. **TypeScript JSX Configuration:** Explicit JSX configuration needed to avoid compilation errors
-5. **Workspace Configuration:** Proper workspace paths for nested component packages
-6. **Git Configuration:** Always create .gitignore before committing and configure git user
-7. **Module Type:** Add `"type": "module"` for ESM compatibility
-8. **Path Resolution:** Use relative paths in vite.config.ts to avoid module resolution issues
-
-### **Documentation Architecture Benefits:**
-
-1. **Separation of Concerns:** Components focus purely on functionality
-2. **Centralized Maintenance:** All documentation updates in one place
-3. **Better Organization:** Consistent patterns across all component documentation
-4. **Easier Onboarding:** Single source of truth for component usage
-5. **Scalability:** Easy to add new components without duplicating documentation setup
-
-### **Essential Dependencies Not Mentioned in Original Guide:**
-- `@types/react` - Required for TypeScript React development
-- `@types/node` - Required for Node.js types in build tools
-- All ESLint related packages and configuration
-- Proper workspace path configuration for nested components
-
-Congratulations! You have successfully completed the entire lifecycle: building, documenting, linting, publishing, and consuming a component from a private library with centralized documentation. You can now repeat the component creation process for additional components and easily document them all in your centralized docs app.
