@@ -7,8 +7,15 @@ export default defineConfig({
     react(),
     dts({
       insertTypesEntry: true,
+      include: ['src'],
     }),
   ],
+  css: {
+    modules: {
+      localsConvention: 'camelCase',
+      generateScopedName: '[name]__[local]___[hash:base64:5]',
+    },
+  },
   build: {
     lib: {
       entry: './src/index.ts',
@@ -25,5 +32,6 @@ export default defineConfig({
         },
       },
     },
+    cssCodeSplit: false,
   },
 }); 

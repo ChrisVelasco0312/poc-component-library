@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './Button.module.scss';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**
@@ -14,12 +15,14 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 /**
  * Primary UI component for user interaction
  */
-export const Button = ({ variant = 'primary', children, ...props }: ButtonProps) => {
-  const mode = variant === 'primary' ? 'bg-blue-500 hover:bg-blue-700' : 'bg-gray-500 hover:bg-gray-700';
+export const Button = ({ variant = 'primary', children, className, ...props }: ButtonProps) => {
+  const variantClass = variant === 'primary' ? styles.primary : styles.secondary;
+  const combinedClassName = [styles.button, variantClass, className].filter(Boolean).join(' ');
+  
   return (
     <button
       type="button"
-      className={['text-white', 'font-bold', 'py-2', 'px-4', 'rounded', mode].join(' ')}
+      className={combinedClassName}
       {...props}
     >
       {children}

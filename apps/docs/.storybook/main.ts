@@ -22,6 +22,22 @@ const config: StorybookConfig = {
   framework: {
     name: getAbsolutePath('@storybook/react-vite'),
     options: {}
-  }
+  },
+  viteFinal: async (config) => {
+    if (config.css) {
+      config.css.modules = {
+        localsConvention: 'camelCase',
+        generateScopedName: '[name]__[local]___[hash:base64:5]',
+      };
+    } else {
+      config.css = {
+        modules: {
+          localsConvention: 'camelCase',
+          generateScopedName: '[name]__[local]___[hash:base64:5]',
+        },
+      };
+    }
+    return config;
+  },
 };
 export default config;
