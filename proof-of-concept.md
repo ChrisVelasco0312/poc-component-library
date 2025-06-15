@@ -28,7 +28,48 @@ pnpm init
 mkdir -p packages apps
 ```
 
-**Step 2: Configure pnpm Workspaces**
+**Step 2: Create .gitignore (CRITICAL - Do this before committing!)**
+
+Create a comprehensive `.gitignore` file in the root:
+
+```gitignore
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production builds
+dist/
+build/
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Storybook build outputs
+storybook-static/
+
+# Editor directories and files
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+```
+
+**Step 3: Configure pnpm Workspaces**
 
 Create a file named `pnpm-workspace.yaml` in the root of your project:
 
@@ -40,7 +81,7 @@ packages:
   - 'packages/config/*' # For shared configs
 ```
 
-**Step 3: Install and Configure Turborepo**
+**Step 4: Install and Configure Turborepo**
 
 Turborepo will manage how we run tasks like `build` and `dev` across all our packages.
 
@@ -49,13 +90,12 @@ Turborepo will manage how we run tasks like `build` and `dev` across all our pac
 pnpm add -D -w turborepo
 ```
 
-Now, create a file named `turbo.json` in the root:
+Now, create a file named `turbo.json` in the root. **Note: Modern Turborepo uses `tasks` instead of `pipeline`:**
 
 ```json
 {
   "$schema": "https://turbo.build/schema.json",
-  "baseBranch": "origin/main",
-  "pipeline": {
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
@@ -69,7 +109,27 @@ Now, create a file named `turbo.json` in the root:
 }
 ```
 
-**Step 4: Create Shared TypeScript and ESLint Configurations**
+**Step 5: Update Root package.json**
+
+Add required fields for modern Turborepo:
+
+```json
+{
+  "name": "poc-component-library",
+  "version": "1.0.0",
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "build": "npx turbo build",
+    "dev": "npx turbo dev",
+    "lint": "npx turbo lint"
+  },
+  "devDependencies": {
+    "turborepo": "0.0.1"
+  }
+}
+```
+
+**Step 6: Create Shared TypeScript and ESLint Configurations**
 
 This is a key monorepo pattern. We define configs once and extend them in our packages.
 
@@ -77,8 +137,6 @@ This is a key monorepo pattern. We define configs once and extend them in our pa
     ```bash
     # Create the directory for the shared tsconfig package
     mkdir -p packages/config/tsconfig
-
-    # Create its package.json
     cd packages/config/tsconfig
     pnpm init
     ```
@@ -119,9 +177,82 @@ This is a key monorepo pattern. We define configs once and extend them in our pa
     }
     ```
 
-2.  **Go back to the root:** `cd ../../..` (from `packages/config/tsconfig`)
+2.  **Shared ESLint Config:**
+    ```bash
+    # Create the directory for the shared ESLint package
+    mkdir -p packages/config/eslint
+    cd packages/config/eslint
+    ```
+    Create `packages/config/eslint/package.json`:
+    ```json
+    {
+      "name": "@your-scope/eslint-config",
+      "version": "0.0.0",
+      "private": true,
+      "type": "module",
+      "files": ["react-library.js"],
+      "dependencies": {
+        "@eslint/js": "^9.0.0"
+      }
+    }
+    ```
+    Create `packages/config/eslint/react-library.js` (ESLint v9 flat config):
+    ```javascript
+    import js from '@eslint/js';
+    import typescript from '@typescript-eslint/eslint-plugin';
+    import typescriptParser from '@typescript-eslint/parser';
+    import react from 'eslint-plugin-react';
+    import reactHooks from 'eslint-plugin-react-hooks';
 
-3.  **Root `tsconfig.json`:** Create a `tsconfig.json` in the project root to make VS Code happy.
+    export default [
+      js.configs.recommended,
+      {
+        files: ['**/*.{js,jsx,ts,tsx}'],
+        languageOptions: {
+          ecmaVersion: 'latest',
+          sourceType: 'module',
+          parser: typescriptParser,
+          parserOptions: {
+            ecmaFeatures: { jsx: true },
+          },
+          globals: {
+            console: 'readonly',
+            window: 'readonly',
+            document: 'readonly',
+            HTMLButtonElement: 'readonly',
+            HTMLElement: 'readonly',
+            React: 'readonly',
+          },
+        },
+        plugins: {
+          '@typescript-eslint': typescript,
+          react: react,
+          'react-hooks': reactHooks,
+        },
+        rules: {
+          ...typescript.configs.recommended.rules,
+          ...react.configs.recommended.rules,
+          ...reactHooks.configs.recommended.rules,
+          'react/prop-types': 'off',
+          '@typescript-eslint/no-unused-vars': 'warn',
+          'react/react-in-jsx-scope': 'off',
+        },
+        settings: {
+          react: { version: 'detect' },
+        },
+      },
+    ];
+    ```
+
+3.  **Install ESLint dependencies at root:**
+    ```bash
+    cd ../../..
+    pnpm add -D -w eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-hooks @eslint/js
+    ```
+
+4.  **Go back to the root:** `cd ../../..` (from `packages/config/eslint`)
+
+5.  **Root `tsconfig.json`:** Create a `tsconfig.json` in the project root to make VS Code happy.
     ```json
     {
       "compilerOptions": {
@@ -148,7 +279,7 @@ cd packages/components/button
 
 **Step 2: Initialize `package.json`**
 
-Run `pnpm init`. Then, edit the generated `package.json` to look like this. **Pay close attention to the `name`, `main`, `module`, `types`, and `files` fields.**
+Run `pnpm init`. Then, edit the generated `package.json` to look like this. **Pay close attention to the `type: "module"` field which is required for ESM compatibility:**
 
 ```json
 // packages/components/button/package.json
@@ -156,6 +287,7 @@ Run `pnpm init`. Then, edit the generated `package.json` to look like this. **Pa
   "name": "@your-scope/button",
   "version": "0.0.0",
   "description": "A simple button component",
+  "type": "module",
   "main": "./dist/button.umd.js",
   "module": "./dist/button.es.js",
   "types": "./dist/index.d.ts",
@@ -170,7 +302,7 @@ Run `pnpm init`. Then, edit the generated `package.json` to look like this. **Pa
   ],
   "scripts": {
     "build": "vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "lint": "eslint src --max-warnings 0"
   },
   "keywords": [],
   "author": "",
@@ -184,32 +316,86 @@ Run `pnpm init`. Then, edit the generated `package.json` to look like this. **Pa
 **Step 3: Install Dependencies**
 
 ```bash
-# Install React as a peer dependency, and Vite/TS as dev dependencies
+# Install React as a peer dependency, and dev dependencies
 pnpm add react --save-peer
-pnpm add -D typescript vite @vitejs/plugin-react vite-plugin-dts @your-scope/tsconfig
+pnpm add -D typescript vite @vitejs/plugin-react vite-plugin-dts @types/react @types/node
 ```
-*Note: We are installing `@your-scope/tsconfig` which we just created! pnpm workspaces makes this possible.*
 
-**Step 4: Configure TypeScript for the `button` Package**
+**Step 4: Add Workspace Dependencies**
 
-Create `packages/components/button/tsconfig.json`:
+Manually add the workspace dependencies to package.json:
 
 ```json
 {
-  "extends": "@your-scope/tsconfig/react-library.json",
+  // ... other fields
+  "devDependencies": {
+    "@your-scope/tsconfig": "workspace:*",
+    "@your-scope/eslint-config": "workspace:*",
+    // ... other dependencies
+  }
+}
+```
+
+Then run `pnpm install` from the root to link workspace packages.
+
+**Step 5: Configure TypeScript for the `button` Package**
+
+Create `packages/components/button/tsconfig.json`. **Note: Use standalone config to avoid path resolution issues:**
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "lib": ["ES2022", "dom", "dom.iterable"],
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true
+  },
   "include": ["src"],
   "exclude": ["dist", "build", "node_modules"]
 }
 ```
 
-**Step 5: Configure Vite for Library Bundling**
+**Step 6: Configure ESLint for the `button` Package**
 
-Create `packages/components/button/vite.config.ts`:
+Create `packages/components/button/eslint.config.js`:
+
+```javascript
+import config from '@your-scope/eslint-config/react-library.js';
+
+export default [
+  ...config,
+  {
+    ignores: ['dist/**', 'node_modules/**', '*.config.js', '*.config.ts'],
+  },
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    languageOptions: {
+      globals: {
+        HTMLButtonElement: 'readonly',
+        HTMLElement: 'readonly',
+        React: 'readonly',
+      },
+    },
+  },
+];
+```
+
+**Step 7: Configure Vite for Library Bundling**
+
+Create `packages/components/button/vite.config.ts`. **Note: Use relative path instead of path module to avoid import issues:**
 
 ```typescript
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import path from 'path';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig({
@@ -221,7 +407,7 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'src/index.ts'),
+      entry: './src/index.ts',
       name: 'Button',
       formats: ['es', 'umd'],
       fileName: (format) => `button.${format}.js`,
@@ -239,7 +425,7 @@ export default defineConfig({
 });
 ```
 
-**Step 6: Create the React Component**
+**Step 8: Create the React Component**
 
 Create `packages/components/button/src/Button.tsx`:
 
@@ -274,7 +460,7 @@ export const Button = ({ variant = 'primary', children, ...props }: ButtonProps)
 };
 ```
 
-**Step 7: Create the Package Entry Point**
+**Step 9: Create the Package Entry Point**
 
 Create `packages/components/button/src/index.ts` to export your component:
 
@@ -282,17 +468,21 @@ Create `packages/components/button/src/index.ts` to export your component:
 export * from './Button';
 ```
 
-**Step 8: Test the Build**
+**Step 10: Test the Build and Lint**
 
 Go to the root of the monorepo (`cd ../../..`) and run:
 
 ```bash
+# Test build
 pnpm --filter @your-scope/button build
 # OR using Turborepo
-pnpm turbo build --filter=@your-scope/button
+npx turbo build --filter=@your-scope/button
+
+# Test linting
+pnpm lint
 ```
 
-You should see a new `dist` folder inside `packages/components/button` containing the bundled JS and type definition files. Success!
+You should see a new `dist` folder inside `packages/components/button` containing the bundled JS and type definition files, and no linting errors. Success!
 
 ---
 
@@ -313,30 +503,46 @@ cd apps/docs
 Run the Storybook initializer. When prompted, choose **Vite** and **TypeScript**.
 
 ```bash
-npx storybook@latest init
+npx storybook@latest init --yes
 ```
-This will install a lot of dependencies and create a `.storybook` folder.
 
-**Step 3: Configure Storybook to Find Components**
+**Step 3: Clean Up Example Files**
 
-Edit `apps/docs/.storybook/main.ts` to tell it where our component stories are located. Replace the existing `stories` array.
+Remove the example stories that come with Storybook to avoid conflicts:
+
+```bash
+rm -rf src/stories
+```
+
+**Step 4: Configure Storybook to Find Components**
+
+Edit `apps/docs/.storybook/main.ts` to tell it where our component stories are located. **Important: Be specific with the path to avoid conflicts:**
 
 ```typescript
 // apps/docs/.storybook/main.ts
 import type { StorybookConfig } from '@storybook/react-vite';
 
+import { join, dirname } from "path"
+
+/**
+* This function is used to resolve the absolute path of a package.
+* It is needed in projects that use Yarn PnP or are set up within a monorepo.
+*/
+function getAbsolutePath(value: string): string {
+  return dirname(require.resolve(join(value, 'package.json')))
+}
 const config: StorybookConfig = {
   stories: [
-    '../../../packages/components/**/*.stories.@(js|jsx|mjs|ts|tsx)'
+    "../../../packages/components/**/src/*.stories.@(js|jsx|mjs|ts|tsx)"
   ],
   addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    '@storybook/addon-onboarding',
-    '@storybook/addon-interactions',
+    getAbsolutePath('@chromatic-com/storybook'),
+    getAbsolutePath('@storybook/addon-docs'),
+    getAbsolutePath("@storybook/addon-a11y"),
+    getAbsolutePath("@storybook/addon-vitest")
   ],
   framework: {
-    name: '@storybook/react-vite',
+    name: getAbsolutePath('@storybook/react-vite'),
     options: {},
   },
   docs: {
@@ -346,9 +552,9 @@ const config: StorybookConfig = {
 export default config;
 ```
 
-**Step 4: Create a Story for the Button**
+**Step 5: Create a Story for the Button**
 
-Go back to your `button` package's `src` folder and create `packages/components/button/src/Button.stories.tsx`:
+**Important: Do NOT install @storybook/react in the component package as it causes conflicts.** Create the story file in your button package's `src` folder: `packages/components/button/src/Button.stories.tsx`:
 
 ```tsx
 import type { Meta, StoryObj } from '@storybook/react';
@@ -388,12 +594,13 @@ export const Secondary: Story = {
 };
 ```
 
-**Step 5: Run Storybook**
+**Step 6: Run Storybook**
 
 Go to the root of the project and run:
 
 ```bash
-pnpm turbo dev --filter=docs
+cd apps/docs
+pnpm storybook
 ```
 
 Open `http://localhost:6006` in your browser. You should see your Button component! You can interact with it, and the "Docs" tab will show auto-generated documentation from your TypeScript types and JSDoc comments.
@@ -454,13 +661,20 @@ We'll do a manual publish from your machine to prove it works.
 
 **Step 1: Commit Your Work**
 
+**Important: Configure git user first if not already done:**
+
+```bash
+git config user.name "Your Name"
+git config user.email "your.email@example.com"
+```
+
 ```bash
 # Add the remote origin for your repo
 git remote add origin https://github.com/your-scope/poc-component-library.git
 
-# Stage and commit all your files
+# Stage and commit all your files (properly excluding node_modules thanks to .gitignore)
 git add .
-git commit -m "feat: initial project setup and button component"
+git commit -m "feat: initial project setup with button component and storybook"
 ```
 
 **Step 2: Authenticate and Publish**
@@ -541,4 +755,23 @@ This is the final test. Let's install and use our button in a brand new, separat
 
 Visit `http://localhost:3000`. You will see your custom buttons, served from your private package, rendered in a completely separate application.
 
-Congratulations! You have successfully completed the entire lifecycle: building, documenting, publishing, and consuming a component from a private library. You can now repeat Phase 2 for the `Input` component and use a tool like **Changesets** to automate the versioning and publishing process.
+---
+
+## **Key Lessons Learned & Important Notes**
+
+### **Critical Issues Fixed in This Guide:**
+
+1. **ESLint v9 Flat Config:** Modern ESLint requires the new flat config format, not .eslintrc
+2. **Turborepo Version Compatibility:** Use `tasks` instead of `pipeline`, add `packageManager` field
+3. **TypeScript JSX Configuration:** Explicit JSX configuration needed to avoid compilation errors
+4. **Storybook Story Conflicts:** Don't install @storybook/react in component packages
+5. **Git Configuration:** Always create .gitignore before committing and configure git user
+6. **Module Type:** Add `"type": "module"` for ESM compatibility
+7. **Path Resolution:** Use relative paths in vite.config.ts to avoid module resolution issues
+
+### **Essential Dependencies Not Mentioned in Original Guide:**
+- `@types/react` - Required for TypeScript React development
+- `@types/node` - Required for Node.js types in build tools
+- All ESLint related packages and configuration
+
+Congratulations! You have successfully completed the entire lifecycle: building, documenting, linting, publishing, and consuming a component from a private library. You can now repeat the component creation process for additional components like `Input` and use tools like **Changesets** to automate the versioning and publishing process.

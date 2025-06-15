@@ -8,6 +8,7 @@
     "build": "npx turbo build",
     "dev": "npx turbo dev",
     "lint": "npx turbo lint",
+    "storybook": "pnpm --filter docs storybook",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
