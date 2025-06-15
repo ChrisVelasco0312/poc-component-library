@@ -1,0 +1,87 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="POC Component Library/Introduction" />
+
+# POC Component Library
+
+Welcome to the **POC Component Library** documentation! This is a proof-of-concept implementation showcasing how to build, document, and maintain a modern React component library.
+
+## 🎯 Purpose
+
+This component library demonstrates:
+
+- **Reusable React Components** with TypeScript
+- **Monorepo Architecture** using pnpm workspaces
+- **Component Documentation** with Storybook
+- **Code Quality** with ESLint and shared configurations
+- **Build System** with Vite and Turborepo
+- **Private Publishing** to GitHub Packages
+
+## 🏗️ Architecture
+
+The library is organized as a monorepo with the following structure:
+
+```
+poc-component-library/
+├── apps/
+│   └── docs/                 # 📚 This Storybook documentation
+├── packages/
+│   ├── components/
+│   │   └── button/           # 🔘 Button component
+│   └── config/
+│       ├── eslint/           # 📏 Shared ESLint config
+│       └── tsconfig/         # 🔧 Shared TypeScript config
+```
+
+## 📦 Available Components
+
+### Button
+A customizable button component with multiple variants and full TypeScript support.
+
+**Features:**
+- Primary and Secondary variants
+- Click event handling
+- Disabled state
+- Full TypeScript definitions
+- Accessible markup
+
+## 🚀 Getting Started
+
+To use these components in your project:
+
+1. **Install the component:**
+   ```bash
+   pnpm add @poc/button
+   ```
+
+2. **Import and use:**
+   ```tsx
+   import { Button } from '@poc/button';
+
+   function App() {
+     return (
+       <Button variant="primary" onClick={() => alert('Hello!')}>
+         Click me!
+       </Button>
+     );
+   }
+   ```
+
+## 🛠️ Development
+
+This documentation is built with Storybook and serves as both:
+- **Component Showcase** - Visual examples of all components
+- **API Documentation** - Props, types, and usage examples
+- **Design System Guide** - Consistent patterns and principles
+
+Each component story demonstrates different use cases and provides interactive controls to explore component behavior.
+
+## 🔗 Resources
+
+- [GitHub Repository](https://github.com/your-username/poc-component-library)
+- [Setup Guide](../../../proof-of-concept.md)
+- [Component Development Guidelines](../../../README.md)
+
+---
+
+**Note:** This is a proof of concept designed for learning and as a foundation for your own component library. 

@@ -78,7 +78,8 @@ Create a file named `pnpm-workspace.yaml` in the root of your project:
 packages:
   - 'apps/*'
   - 'packages/*'
-  - 'packages/config/*' # For shared configs
+  - 'packages/config/*'
+  - 'packages/components/*' # For component packages
 ```
 
 **Step 4: Install and Configure Turborepo**
@@ -104,6 +105,10 @@ Now, create a file named `turbo.json` in the root. **Note: Modern Turborepo uses
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "storybook": {
+      "cache": false,
+      "persistent": true
     }
   }
 }
@@ -121,7 +126,8 @@ Add required fields for modern Turborepo:
   "scripts": {
     "build": "npx turbo build",
     "dev": "npx turbo dev",
-    "lint": "npx turbo lint"
+    "lint": "npx turbo lint",
+    "storybook": "pnpm --filter docs storybook"
   },
   "devDependencies": {
     "turborepo": "0.0.1"
@@ -265,7 +271,7 @@ This is a key monorepo pattern. We define configs once and extend them in our pa
 
 ### **Phase 2: Building Our First Component (`Button`)**
 
-Now we create our first reusable component as its own package.
+Now we create our first reusable component as its own package. **Important: Components will NOT contain their own stories - those will live in the docs app.**
 
 **Step 1: Create the `button` Package**
 
@@ -486,9 +492,9 @@ You should see a new `dist` folder inside `packages/components/button` containin
 
 ---
 
-### **Phase 3: Visual Development with Storybook**
+### **Phase 3: Centralized Documentation with Storybook**
 
-Let's set up a place to view, test, and document our component.
+**This is where our approach differs from typical setups.** Instead of putting stories inside component packages, we'll create a centralized documentation app that imports and documents all components.
 
 **Step 1: Create the `docs` App**
 
@@ -500,112 +506,165 @@ cd apps/docs
 
 **Step 2: Initialize Storybook**
 
-Run the Storybook initializer. When prompted, choose **Vite** and **TypeScript**.
+Run the Storybook initializer:
 
 ```bash
 npx storybook@latest init --yes
 ```
 
-**Step 3: Clean Up Example Files**
+**Step 3: Clean Up Boilerplate**
 
-Remove the example stories that come with Storybook to avoid conflicts:
+Remove the Vite app boilerplate since we only need Storybook:
 
 ```bash
-rm -rf src/stories
+# Remove Vite-specific files
+rm -rf src/App.* src/main.tsx src/index.css src/assets public/vite.svg index.html
 ```
 
-**Step 4: Configure Storybook to Find Components**
+**Step 4: Set Up Documentation Structure**
 
-Edit `apps/docs/.storybook/main.ts` to tell it where our component stories are located. **Important: Be specific with the path to avoid conflicts:**
+```bash
+# Create stories directory
+mkdir -p src/stories
+```
+
+**Step 5: Configure Package Dependencies**
+
+Edit `apps/docs/package.json` to include your component packages and clean up unnecessary scripts:
+
+```json
+{
+  "name": "docs",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@your-scope/button": "workspace:*",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@storybook/react": "^9.0.9",
+    "@storybook/react-vite": "^9.0.9",
+    "storybook": "^9.0.9",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "typescript": "~5.8.3"
+  }
+}
+```
+
+**Step 6: Configure Storybook to Find Local Stories**
+
+Edit `apps/docs/.storybook/main.ts` to look for stories in the docs app:
 
 ```typescript
-// apps/docs/.storybook/main.ts
 import type { StorybookConfig } from '@storybook/react-vite';
 
-import { join, dirname } from "path"
-
-/**
-* This function is used to resolve the absolute path of a package.
-* It is needed in projects that use Yarn PnP or are set up within a monorepo.
-*/
-function getAbsolutePath(value: string): string {
-  return dirname(require.resolve(join(value, 'package.json')))
-}
 const config: StorybookConfig = {
   stories: [
-    "../../../packages/components/**/src/*.stories.@(js|jsx|mjs|ts|tsx)"
+    "../src/stories/*.stories.@(js|jsx|mjs|ts|tsx)"
   ],
   addons: [
-    getAbsolutePath('@chromatic-com/storybook'),
-    getAbsolutePath('@storybook/addon-docs'),
-    getAbsolutePath("@storybook/addon-a11y"),
-    getAbsolutePath("@storybook/addon-vitest")
+    '@storybook/addon-docs',
+    '@storybook/addon-essentials'
   ],
   framework: {
-    name: getAbsolutePath('@storybook/react-vite'),
+    name: '@storybook/react-vite',
     options: {},
-  },
-  docs: {
-    autodocs: 'tag',
   },
 };
 export default config;
 ```
 
-**Step 5: Create a Story for the Button**
+**Step 7: Create Documentation Content**
 
-**Important: Do NOT install @storybook/react in the component package as it causes conflicts.** Create the story file in your button package's `src` folder: `packages/components/button/src/Button.stories.tsx`:
+1. **Create Introduction Page** (`apps/docs/src/stories/Introduction.mdx`):
+   ```mdx
+   import { Meta } from '@storybook/blocks';
 
-```tsx
-import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from './Button';
+   <Meta title="POC Component Library/Introduction" />
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
-const meta = {
-  title: 'Components/Button',
-  component: Button,
-  parameters: {
-    layout: 'centered',
-  },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-  tags: ['autodocs'],
-  // More on argTypes: https://storybook.js.org/docs/api/argtypes
-  argTypes: {
-    variant: { control: 'radio', options: ['primary', 'secondary'] },
-  },
-} satisfies Meta<typeof Button>;
+   # POC Component Library
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+   Welcome to our component library documentation! This demonstrates a centralized approach to component documentation where all stories live in a dedicated docs app.
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Primary: Story = {
-  args: {
-    variant: 'primary',
-    children: 'Primary Button',
-  },
-};
+   ## Architecture Benefits
 
-export const Secondary: Story = {
-  args: {
-    variant: 'secondary',
-    children: 'Secondary Button',
-  },
-};
-```
+   - **Separation of Concerns**: Components focus on functionality
+   - **Centralized Maintenance**: All documentation in one place
+   - **Better Organization**: Consistent documentation patterns
+   - **Easier Onboarding**: Single location for all component examples
+   ```
 
-**Step 6: Run Storybook**
+2. **Create Button Stories** (`apps/docs/src/stories/Button.stories.tsx`):
+   ```tsx
+   import type { Meta, StoryObj } from '@storybook/react';
+   import { Button } from '@your-scope/button';
 
-Go to the root of the project and run:
+   const meta = {
+     title: 'Components/Button',
+     component: Button,
+     parameters: {
+       layout: 'centered',
+     },
+     tags: ['autodocs'],
+     argTypes: {
+       variant: { control: 'radio', options: ['primary', 'secondary'] },
+     },
+   } satisfies Meta<typeof Button>;
+
+   export default meta;
+   type Story = StoryObj<typeof meta>;
+
+   export const Primary: Story = {
+     args: {
+       variant: 'primary',
+       children: 'Primary Button',
+     },
+   };
+
+   export const Secondary: Story = {
+     args: {
+       variant: 'secondary',
+       children: 'Secondary Button',
+     },
+   };
+
+   export const WithClickHandler: Story = {
+     args: {
+       variant: 'primary',
+       children: 'Click me!',
+       onClick: () => alert('Button clicked!'),
+     },
+   };
+
+   export const Disabled: Story = {
+     args: {
+       variant: 'primary',
+       children: 'Disabled Button',
+       disabled: true,
+     },
+   };
+   ```
+
+**Step 8: Install Dependencies and Run Storybook**
 
 ```bash
-cd apps/docs
+# From root directory
+cd ../..
+pnpm install
+
+# Run Storybook
 pnpm storybook
 ```
 
-Open `http://localhost:6006` in your browser. You should see your Button component! You can interact with it, and the "Docs" tab will show auto-generated documentation from your TypeScript types and JSDoc comments.
-
-*Note: You'll see a warning about Tailwind CSS not being set up. This is expected since we used Tailwind classes in the Button. For a real project, you would add Tailwind to the `docs` app.*
+Open `http://localhost:6006` in your browser. You should see your centralized component documentation with the Introduction page and Button component stories!
 
 ---
 
@@ -674,7 +733,7 @@ git remote add origin https://github.com/your-scope/poc-component-library.git
 
 # Stage and commit all your files (properly excluding node_modules thanks to .gitignore)
 git add .
-git commit -m "feat: initial project setup with button component and storybook"
+git commit -m "feat: initial project setup with centralized documentation"
 ```
 
 **Step 2: Authenticate and Publish**
@@ -761,17 +820,27 @@ Visit `http://localhost:3000`. You will see your custom buttons, served from you
 
 ### **Critical Issues Fixed in This Guide:**
 
-1. **ESLint v9 Flat Config:** Modern ESLint requires the new flat config format, not .eslintrc
-2. **Turborepo Version Compatibility:** Use `tasks` instead of `pipeline`, add `packageManager` field
-3. **TypeScript JSX Configuration:** Explicit JSX configuration needed to avoid compilation errors
-4. **Storybook Story Conflicts:** Don't install @storybook/react in component packages
-5. **Git Configuration:** Always create .gitignore before committing and configure git user
-6. **Module Type:** Add `"type": "module"` for ESM compatibility
-7. **Path Resolution:** Use relative paths in vite.config.ts to avoid module resolution issues
+1. **Centralized Documentation Strategy:** Stories live in docs app, not component packages
+2. **ESLint v9 Flat Config:** Modern ESLint requires the new flat config format, not .eslintrc
+3. **Turborepo Version Compatibility:** Use `tasks` instead of `pipeline`, add `packageManager` field
+4. **TypeScript JSX Configuration:** Explicit JSX configuration needed to avoid compilation errors
+5. **Workspace Configuration:** Proper workspace paths for nested component packages
+6. **Git Configuration:** Always create .gitignore before committing and configure git user
+7. **Module Type:** Add `"type": "module"` for ESM compatibility
+8. **Path Resolution:** Use relative paths in vite.config.ts to avoid module resolution issues
+
+### **Documentation Architecture Benefits:**
+
+1. **Separation of Concerns:** Components focus purely on functionality
+2. **Centralized Maintenance:** All documentation updates in one place
+3. **Better Organization:** Consistent patterns across all component documentation
+4. **Easier Onboarding:** Single source of truth for component usage
+5. **Scalability:** Easy to add new components without duplicating documentation setup
 
 ### **Essential Dependencies Not Mentioned in Original Guide:**
 - `@types/react` - Required for TypeScript React development
 - `@types/node` - Required for Node.js types in build tools
 - All ESLint related packages and configuration
+- Proper workspace path configuration for nested components
 
-Congratulations! You have successfully completed the entire lifecycle: building, documenting, linting, publishing, and consuming a component from a private library. You can now repeat the component creation process for additional components like `Input` and use tools like **Changesets** to automate the versioning and publishing process.
+Congratulations! You have successfully completed the entire lifecycle: building, documenting, linting, publishing, and consuming a component from a private library with centralized documentation. You can now repeat the component creation process for additional components and easily document them all in your centralized docs app.

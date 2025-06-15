@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from './Button';
+import { Button } from '@poc/button';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
@@ -31,5 +31,21 @@ export const Secondary: Story = {
   args: {
     variant: 'secondary',
     children: 'Secondary Button',
+  },
+};
+
+export const WithClickHandler: Story = {
+  args: {
+    variant: 'primary',
+    children: 'Click me!',
+    onClick: () => alert('Button clicked!'),
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    variant: 'primary',
+    children: 'Disabled Button',
+    disabled: true,
   },
 }; 

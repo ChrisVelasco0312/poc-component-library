@@ -7,7 +7,7 @@ A **proof of concept** for building a modern UI component library using React, T
 This project demonstrates how to:
 - Build reusable React components with TypeScript
 - Set up a monorepo with shared configurations
-- Document components with Storybook
+- Document components with Storybook in a centralized docs app
 - Publish components to GitHub Packages (private registry)
 - Maintain code quality with ESLint and automated workflows
 
@@ -17,10 +17,11 @@ This project demonstrates how to:
 ```
 poc-component-library/
 ├── apps/
-│   └── docs/                 # Storybook documentation
+│   └── docs/                 # 📚 Centralized Storybook documentation
+│       └── src/stories/      # All component stories and docs
 ├── packages/
 │   ├── components/
-│   │   └── button/           # @poc/button component
+│   │   └── button/           # @poc/button component (pure)
 │   └── config/
 │       ├── eslint/           # @poc/eslint-config
 │       └── tsconfig/         # @poc/tsconfig
@@ -28,6 +29,12 @@ poc-component-library/
 ├── pnpm-workspace.yaml       # pnpm workspaces config
 └── turbo.json               # Turborepo task pipeline
 ```
+
+### Documentation Strategy
+- **Components** (`packages/components/*`) focus purely on implementation
+- **Documentation** (`apps/docs`) centralizes all stories, examples, and guides
+- **Separation of Concerns**: Components don't contain their own stories
+- **Centralized Maintenance**: All documentation updates happen in one place
 
 ### Tech Stack
 - **Package Manager**: pnpm with workspaces
@@ -75,7 +82,7 @@ A simple, customizable button component with TypeScript support.
 - Primary/Secondary variants
 - Full TypeScript definitions
 - ESM and UMD builds
-- Storybook documentation
+- Centralized Storybook documentation
 
 **Usage:**
 ```tsx
@@ -88,11 +95,17 @@ import { Button } from '@poc/button';
 
 ## 📚 Documentation
 
-Component documentation is available through Storybook:
+Component documentation is centralized in the `docs` app and available through Storybook:
 ```bash
 pnpm storybook
 # Opens http://localhost:6006
 ```
+
+The docs app contains:
+- **Component Stories** - Interactive examples and use cases
+- **API Documentation** - Props, types, and interfaces  
+- **Usage Guidelines** - Best practices and patterns
+- **Design System** - Consistent styling and behavior
 
 ## 🔧 Adding New Components
 
@@ -123,10 +136,14 @@ pnpm storybook
    - Copy `tsconfig.json` from button component
    - Copy `eslint.config.js` from button component
 
-4. **Create component and story files:**
-   - `src/YourComponent.tsx`
-   - `src/index.ts`
-   - `src/YourComponent.stories.tsx`
+4. **Create component files:**
+   - `src/YourComponent.tsx` - The actual component
+   - `src/index.ts` - Export entry point
+
+5. **Add to docs app:**
+   - Add component as dependency in `apps/docs/package.json`
+   - Create `apps/docs/src/stories/YourComponent.stories.tsx`
+   - Import and document in Storybook
 
 ## 🚢 Publishing
 
@@ -159,12 +176,17 @@ pnpm publish --filter @your-scope/your-component
 - **Workspaces**: `pnpm-workspace.yaml` - Package linking
 - **Storybook**: `apps/docs/.storybook/` - Component documentation
 
+### Documentation Structure
+- **Stories**: `apps/docs/src/stories/` - All component stories
+- **Introduction**: `apps/docs/src/stories/Introduction.mdx` - Library overview
+- **Examples**: Each component has comprehensive usage examples
+
 ## 📋 Best Practices Demonstrated
 
-1. **Monorepo Management**: Shared configurations and workspace dependencies
-2. **Type Safety**: Full TypeScript coverage with declaration files
-3. **Code Quality**: ESLint with React and TypeScript rules
-4. **Documentation**: Automated component docs with Storybook
+1. **Separation of Concerns**: Components focus on functionality, docs on presentation
+2. **Centralized Documentation**: All stories and guides in one maintainable location
+3. **Type Safety**: Full TypeScript coverage with declaration files
+4. **Code Quality**: ESLint with React and TypeScript rules
 5. **Build Optimization**: Tree-shakeable ESM builds with Vite
 6. **Private Registry**: Secure component distribution via GitHub Packages
 
@@ -176,8 +198,9 @@ To create your own component library based on this POC:
 2. **Replace scope**: Search and replace `@poc` with `@your-scope`
 3. **Update repository URLs** in package.json files
 4. **Add your components** following the established patterns
-5. **Configure CI/CD** for automated publishing
-6. **Customize Storybook** theme and documentation
+5. **Update documentation** in the docs app
+6. **Configure CI/CD** for automated publishing
+7. **Customize Storybook** theme and documentation
 
 ## 📖 Related Documentation
 
