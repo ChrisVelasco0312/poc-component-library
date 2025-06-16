@@ -16,12 +16,16 @@ This project demonstrates how to:
 
 ## 📚 Documentation
 
+### Guides
 - [Architecture](./docs/architecture.md) - Detailed architecture and tech stack
 - [Setup Guide](./docs/setup-guide.md) - Installation and development setup
 - [Implementation Guide](./docs/implementation-guide.md) - Step-by-step implementation details
 - [Styling Guide](./docs/styling-guide.md) - SCSS modules and styling patterns
 - [Troubleshooting](./docs/troubleshooting.md) - Common issues and solutions
 - [Contributing](./docs/contributing.md) - How to contribute to this project
+
+### Project Management
+- [Project Roadmap](./docs/project/roadmap.md) - Implementation plan and milestones
 
 ## 🚀 Quick Start
 

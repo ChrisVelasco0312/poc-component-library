@@ -854,3 +854,236 @@ This is the final test. Let's install and use our button in a brand new, separat
     npx create-next-app@latest test-consumer-app --ts --eslint --tailwind --app --src-dir --import-alias "@/*"
     cd test-consumer-app
     ```
+
+---
+
+## Theming System: Roadmap & Implementation
+
+This section describes how to add theme support to the component library, allowing style variables (such as color palettes) to be easily shared and switched across all components.
+
+### 1. Project Structure & Theme Definition
+
+**a. Create a Theme System Directory**
+- Add a new directory: `packages/themes/`
+- Inside, create:
+  - `default/` (for default themes)
+  - `utils/` (for theme helpers, e.g., context, hooks)
+
+**b. Define Theme Shape**
+- Create a TypeScript interface for a theme (e.g., `Theme.ts`):
+  ```ts
+  export interface Theme {
+    colors: {
+      primary: string[];
+      secondary: string[];
+      tertiary: string[];
+      success: string[];
+      warning: string[];
+      error: string[];
+      info: string[];
+      // ...other semantic colors
+    };
+    // Add typography, spacing, etc. as needed
+  }
+  ```
+
+**c. Add Default Themes**
+- In `packages/themes/default/`, create files like `atix.ts`, `banco-w.ts`, etc., each exporting a `Theme` object with color arrays as shown in the color palette example.
+
+---
+
+### 2. Theme Provider Implementation
+
+**a. Create a Theme Context**
+- In `packages/themes/utils/ThemeProvider.tsx`:
+  - Create a React context for the theme.
+  - Provide a `ThemeProvider` component that accepts a `theme` prop and makes it available via context.
+
+**b. Create a Hook**
+- Add `useTheme()` hook to access the current theme in any component.
+
+**Example:**
+```tsx
+// ThemeProvider.tsx
+import React, { createContext, useContext } from 'react';
+import { Theme } from '../Theme';
+
+const ThemeContext = createContext<Theme | undefined>(undefined);
+
+export const ThemeProvider: React.FC<{ theme: Theme; children: React.ReactNode }> = ({ theme, children }) => (
+  <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
+);
+
+export const useTheme = () => {
+  const ctx = useContext(ThemeContext);
+  if (!ctx) throw new Error('useTheme must be used within a ThemeProvider');
+  return ctx;
+};
+```
+
+---
+
+### 3. Component Integration
+
+**a. Refactor Components to Use Theme**
+- Replace hardcoded colors with values from `useTheme()`.
+- Example:
+  ```tsx
+  const { colors } = useTheme();
+  <button style={{ background: colors.primary[500] }}>Click me</button>
+  ```
+
+**b. Support for SCSS/CSS Variables (Optional)**
+- If using SCSS modules, generate CSS variables from the theme and inject them at the root or component level.
+
+---
+
+### 4. Applying and Switching Themes
+
+**a. Usage in App**
+- Wrap your app (or Storybook preview) with `ThemeProvider` and pass a theme:
+  ```tsx
+  import { ThemeProvider } from '@poc/themes/utils/ThemeProvider';
+  import { atixTheme } from '@poc/themes/default/atix';
+
+  <ThemeProvider theme={atixTheme}>
+    <App />
+  </ThemeProvider>
+  ```
+
+**b. Switching Themes**
+- Allow dynamic switching by updating the `theme` prop on `ThemeProvider` (e.g., via a dropdown).
+
+---
+
+### 5. Providing Default Themes
+
+**a. Export Default Themes**
+- Export all default themes from `@poc/themes` for easy import:
+  ```ts
+  export { atixTheme } from './default/atix';
+  export { bancoWTheme } from './default/banco-w';
+  // etc.
+  ```
+
+**b. Document Usage**
+- In your docs, show how to import and use a default theme:
+  ```tsx
+  import { ThemeProvider, atixTheme } from '@poc/themes';
+
+  <ThemeProvider theme={atixTheme}>...</ThemeProvider>
+  ```
+
+---
+
+### 6. Documentation & Storybook Integration
+
+- Add a section in your docs for "Theming.
+- Show how to use, switch, and extend themes.
+- In Storybook, add a theme switcher (addon or custom toolbar) to preview components with different themes.
+
+---
+
+### Summary Table
+
+| Step | Description | Outcome |
+|------|-------------|---------|
+| 1    | Define theme structure & default themes | Consistent theme objects |
+| 2    | Implement ThemeProvider & hook | Easy theme access in components |
+| 3    | Refactor components | Components use theme variables |
+| 4    | Apply/switch themes | Theming at app or story level |
+| 5    | Export/document default themes | Easy adoption for users |
+| 6    | Update docs/Storybook | Clear usage and preview |
+
+---
+
+## How to Use a Custom Theme in Your App
+
+If you are using this component library in your own application and want to apply your own theme, follow these steps:
+
+### 1. **Install the Library**
+
+```bash
+pnpm add @your-scope/components @your-scope/themes
+# or
+npm install @your-scope/components @your-scope/themes
+```
+
+### 2. **Create Your Theme Object in Your App**
+
+In your application codebase (not in the library), define your theme object matching the `Theme` interface:
+
+```ts
+// src/theme/myTheme.ts
+import type { Theme } from '@your-scope/themes';
+
+export const myTheme: Theme = {
+  colors: {
+    primary: ['#001F3F', '#003366', '#00509E', '#0074D9', '#339CFF', '#66B2FF', '#99CCFF', '#CCE6FF'],
+    secondary: ['#FFDC00', '#FFE066', '#FFF3BF', '#FFF9E3', '#FFFBEA', '#FFFDF2', '#FFFFF8', '#FFFFFC'],
+    tertiary: ['#2ECC40', '#51D88A', '#A3E635', '#D9F99D', '#F0FDF4', '#F7FEE7', '#ECFDF5', '#F0FDF4'],
+    success: ['#28a745', '#51cf66', '#69db7c', '#b2f2bb', '#d3f9d8', '#e6fcf5', '#f8f9fa', '#f1f3f5'],
+    warning: ['#ffc107', '#ffe066', '#fff3bf', '#fff9db', '#fffbe6', '#fffdf2', '#fffef8', '#fffffc'],
+    error: ['#dc3545', '#ff6b6b', '#ffa8a8', '#ffe3e3', '#fff5f5', '#fff0f0', '#fff8f8', '#fffafa'],
+    info: ['#17a2b8', '#63e6be', '#a5d8ff', '#d0ebff', '#e3fafc', '#f1f3f5', '#f8f9fa', '#f1f3f5'],
+    // ...other color scales as needed
+  },
+  // Add other variables as needed (typography, spacing, etc.)
+};
+```
+
+### 3. **Wrap Your App with the ThemeProvider**
+
+In your app's root (e.g., `App.tsx` or `main.tsx`):
+
+```tsx
+import { ThemeProvider } from '@your-scope/themes';
+import { myTheme } from './theme/myTheme';
+
+function App() {
+  return (
+    <ThemeProvider theme={myTheme}>
+      {/* your app/components here */}
+    </ThemeProvider>
+  );
+}
+
+export default App;
+```
+
+### 4. **All Components Will Use Your Theme**
+
+All components from the library that use the theme context will now automatically use your custom theme values.
+
+---
+
+### Notes for Custom Theme Implementation
+
+- **You do NOT need to modify the library source.**  
+- **You do NOT need to add your theme to the library's `themes` folder.**  
+- You only need to match the `Theme` interface exported by the library.
+- You can keep your theme file anywhere in your app codebase.
+
+---
+
+### Example Project Structure
+
+```
+my-app/
+├── src/
+│   ├── theme/
+│   │   └── myTheme.ts
+│   ├── App.tsx
+│   └── main.tsx
+├── package.json
+└── ...
+```
+
+---
+
+### Tips for Custom Themes
+
+- **Follow the structure:** Your theme object must match the `Theme` interface.
+- **Color arrays:** Each color (primary, secondary, etc.) should be an array of shades, from darkest to lightest.
+- **Extend as needed:** You can add more variables (typography, spacing, border radius, etc.) to the `Theme` interface.
+- **Type safety:** TypeScript will help you catch any missing or misnamed fields.
