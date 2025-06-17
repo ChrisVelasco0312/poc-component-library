@@ -991,47 +991,11 @@ export const useTheme = () => {
 
 ### 3. Component Integration
 
-**a. Generate CSS Variables from Theme**
+Since this project uses SCSS modules, we'll generate CSS variables from the theme and inject them into the DOM.
 
-Since this project uses SCSS modules, we'll generate CSS variables from the theme and inject them into the DOM:
+**a. Update Components to Use CSS Variables in SCSS**
 
-```tsx
-// packages/themes/utils/ThemeProvider.tsx
-import React, { createContext, useContext, useEffect } from 'react';
-import { Theme } from '../Theme';
-
-const ThemeContext = createContext<Theme | undefined>(undefined);
-
-export const ThemeProvider: React.FC<{ theme: Theme; children: React.ReactNode }> = 
-  ({ theme, children }) => {
-    // Generate CSS variables from theme
-    useEffect(() => {
-      const root = document.documentElement;
-      
-      // Generate CSS variables for each color array
-      Object.entries(theme.colors).forEach(([colorName, colorArray]) => {
-        colorArray.forEach((color, index) => {
-          const shade = index * 100; // 0, 100, 200, 300, etc.
-          root.style.setProperty(`--color-${colorName}-${shade}`, color);
-        });
-      });
-    }, [theme]);
-
-    return (
-      <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
-    );
-  };
-
-export const useTheme = () => {
-  const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error('useTheme must be used within a ThemeProvider');
-  return ctx;
-};
-```
-
-**b. Update Components to Use CSS Variables in SCSS**
-
-Refactor component SCSS modules to use the generated CSS variables:
+Refactor component SCSS modules to use the generated CSS variables.
 
 ```scss
 // packages/components/button/src/Button.module.scss
@@ -1071,7 +1035,7 @@ Refactor component SCSS modules to use the generated CSS variables:
 }
 ```
 
-**c. Update Component Implementation**
+**b. Update Component Implementation**
 
 ```tsx
 // packages/components/button/src/Button.tsx

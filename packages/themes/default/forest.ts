@@ -1,0 +1,76 @@
+import { Theme } from '../Theme';
+
+export const forestTheme: Theme = {
+  colors: {
+    primary: [
+      "#1A2E05", // darkest
+      "#365314",
+      "#4D7C0F",
+      "#65A30D",
+      "#84CC16",
+      "#A3E635",
+      "#BEF264",
+      "#D9F99D", // lightest
+    ],
+    secondary: [
+      "#292524",
+      "#44403C",
+      "#57534E",
+      "#78716C",
+      "#A8A29E",
+      "#C7C2BD",
+      "#E7E5E4",
+      "#F5F5F4",
+    ],
+    tertiary: [
+      "#78350F",
+      "#92400E",
+      "#C2410C",
+      "#EA580C",
+      "#F97316",
+      "#FB923C",
+      "#FDBA74",
+      "#FED7AA",
+    ],
+    success: [
+      "#14532D",
+      "#166534",
+      "#15803D",
+      "#16A34A",
+      "#22C55E",
+      "#4ADE80",
+      "#86EFAC",
+      "#BBF7D0",
+    ],
+    warning: [
+      "#854D0E",
+      "#A16207",
+      "#CA8A04",
+      "#EAB308",
+      "#FACC15",
+      "#FDE047",
+      "#FEF08A",
+      "#FEFCE8",
+    ],
+    error: [
+      "#7C2D12",
+      "#9A3412",
+      "#C2410C",
+      "#EA580C",
+      "#F97316",
+      "#FB923C",
+      "#FDBA74",
+      "#FED7AA",
+    ],
+    info: [
+      "#1E3A8A",
+      "#1E40AF",
+      "#1D4ED8",
+      "#2563EB",
+      "#3B82F6",
+      "#60A5FA",
+      "#93C5FD",
+      "#DBEAFE",
+    ],
+  },
+}; 

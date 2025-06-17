@@ -1,0 +1,76 @@
+import { Theme } from '../Theme';
+
+export const oceanTheme: Theme = {
+  colors: {
+    primary: [
+      "#0A1628", // darkest
+      "#1E3A5F", 
+      "#2563EB",
+      "#3B82F6",
+      "#60A5FA",
+      "#93C5FD",
+      "#BFDBFE",
+      "#DBEAFE", // lightest
+    ],
+    secondary: [
+      "#0F1419",
+      "#374151",
+      "#6B7280",
+      "#9CA3AF",
+      "#D1D5DB",
+      "#E5E7EB",
+      "#F3F4F6",
+      "#F9FAFB",
+    ],
+    tertiary: [
+      "#064E3B",
+      "#065F46",
+      "#047857",
+      "#059669",
+      "#10B981",
+      "#34D399",
+      "#6EE7B7",
+      "#A7F3D0",
+    ],
+    success: [
+      "#14532D",
+      "#166534",
+      "#15803D",
+      "#16A34A",
+      "#22C55E",
+      "#4ADE80",
+      "#86EFAC",
+      "#BBF7D0",
+    ],
+    warning: [
+      "#92400E",
+      "#B45309",
+      "#D97706",
+      "#F59E0B",
+      "#FBBF24",
+      "#FCD34D",
+      "#FDE68A",
+      "#FEF3C7",
+    ],
+    error: [
+      "#7F1D1D",
+      "#991B1B",
+      "#DC2626",
+      "#EF4444",
+      "#F87171",
+      "#FCA5A5",
+      "#FECACA",
+      "#FEE2E2",
+    ],
+    info: [
+      "#0C4A6E",
+      "#0369A1",
+      "#0284C7",
+      "#0EA5E9",
+      "#38BDF8",
+      "#7DD3FC",
+      "#BAE6FD",
+      "#E0F2FE",
+    ],
+  },
+}; 

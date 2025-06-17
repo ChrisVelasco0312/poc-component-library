@@ -111,6 +111,28 @@ importers:
 
   packages/config/tsconfig: {}
 
+  packages/themes:
+    dependencies:
+      react:
+        specifier: ^19.1.0
+        version: 19.1.0
+    devDependencies:
+      '@poc/eslint-config':
+        specifier: workspace:*
+        version: link:../config/eslint
+      '@poc/tsconfig':
+        specifier: workspace:*
+        version: link:../config/tsconfig
+      '@types/react':
+        specifier: ^19.1.8
+        version: 19.1.8
+      '@types/react-dom':
+        specifier: ^19.1.0
+        version: 19.1.6(@types/react@19.1.8)
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
 packages:
 
   '@adobe/css-tools@4.4.3':
