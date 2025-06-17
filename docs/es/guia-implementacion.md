@@ -316,11 +316,111 @@ export const useTheme = () => {
 
 ### 3. Integración de Componentes
 
-Refactorizar componentes para usar tema:
+**a. Generar Variables CSS desde el Tema**
+
+Dado que este proyecto usa módulos SCSS, generaremos variables CSS del tema e las inyectaremos en el DOM:
 
 ```tsx
-const { colors } = useTheme();
-<button style={{ background: colors.primary[500] }}>Haz clic</button>
+// packages/themes/utils/ThemeProvider.tsx
+import React, { createContext, useContext, useEffect } from 'react';
+import { Theme } from '../Theme';
+
+const ThemeContext = createContext<Theme | undefined>(undefined);
+
+export const ThemeProvider: React.FC<{ theme: Theme; children: React.ReactNode }> = 
+  ({ theme, children }) => {
+    // Generar variables CSS desde el tema
+    useEffect(() => {
+      const root = document.documentElement;
+      
+      // Generar variables CSS para cada arreglo de colores
+      Object.entries(theme.colors).forEach(([colorName, colorArray]) => {
+        colorArray.forEach((color, index) => {
+          const shade = index * 100; // 0, 100, 200, 300, etc.
+          root.style.setProperty(`--color-${colorName}-${shade}`, color);
+        });
+      });
+    }, [theme]);
+
+    return (
+      <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
+    );
+  };
+
+export const useTheme = () => {
+  const ctx = useContext(ThemeContext);
+  if (!ctx) throw new Error('useTheme must be used within a ThemeProvider');
+  return ctx;
+};
+```
+
+**b. Actualizar Componentes para Usar Variables CSS en SCSS**
+
+Refactorizar módulos SCSS de componentes para usar las variables CSS generadas:
+
+```scss
+// packages/components/button/src/Button.module.scss
+.button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  
+  &.primary {
+    background-color: var(--color-primary-500);
+    color: white;
+    
+    &:hover {
+      background-color: var(--color-primary-600);
+    }
+    
+    &:active {
+      background-color: var(--color-primary-700);
+    }
+  }
+  
+  &.secondary {
+    background-color: var(--color-secondary-200);
+    color: var(--color-secondary-800);
+    
+    &:hover {
+      background-color: var(--color-secondary-300);
+    }
+    
+    &:active {
+      background-color: var(--color-secondary-400);
+    }
+  }
+}
+```
+
+**c. Actualizar Implementación del Componente**
+
+```tsx
+// packages/components/button/src/Button.tsx
+import React from 'react';
+import styles from './Button.module.scss';
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'secondary';
+  children: React.ReactNode;
+}
+
+export const Button = ({ variant = 'primary', children, className, ...props }: ButtonProps) => {
+  const combinedClassName = [
+    styles.button,
+    styles[variant],
+    className
+  ].filter(Boolean).join(' ');
+  
+  return (
+    <button className={combinedClassName} {...props}>
+      {children}
+    </button>
+  );
+};
 ```
 
 ### 4. Uso en App

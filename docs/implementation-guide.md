@@ -76,10 +76,10 @@ Create a file named `pnpm-workspace.yaml` in the root of your project:
 ```yaml
 # pnpm-workspace.yaml
 packages:
-  - 'apps/*'
-  - 'packages/*'
-  - 'packages/config/*'
-  - 'packages/components/*' # For component packages
+  - "apps/*"
+  - "packages/*"
+  - "packages/config/*"
+  - "packages/components/*" # For component packages
 ```
 
 **Step 4: Install and Configure Turborepo**
@@ -140,13 +140,16 @@ Add required fields for modern Turborepo:
 This is a key monorepo pattern. We define configs once and extend them in our packages.
 
 1.  **Shared TypeScript Config:**
+
     ```bash
     # Create the directory for the shared tsconfig package
     mkdir -p packages/config/tsconfig
     cd packages/config/tsconfig
     pnpm init
     ```
+
     In `packages/config/tsconfig/package.json`, set the name to `@your-scope/tsconfig` and make it private.
+
     ```json
     {
       "name": "@your-scope/tsconfig",
@@ -155,7 +158,9 @@ This is a key monorepo pattern. We define configs once and extend them in our pa
       "files": ["react-library.json"]
     }
     ```
+
     Now, create the actual TSConfig file `packages/config/tsconfig/react-library.json`:
+
     ```json
     {
       "$schema": "https://json.schemastore.org/tsconfig",
@@ -184,12 +189,15 @@ This is a key monorepo pattern. We define configs once and extend them in our pa
     ```
 
 2.  **Shared ESLint Config:**
+
     ```bash
     # Create the directory for the shared ESLint package
     mkdir -p packages/config/eslint
     cd packages/config/eslint
     ```
+
     Create `packages/config/eslint/package.json`:
+
     ```json
     {
       "name": "@your-scope/eslint-config",
@@ -202,55 +210,58 @@ This is a key monorepo pattern. We define configs once and extend them in our pa
       }
     }
     ```
+
     Create `packages/config/eslint/react-library.js` (ESLint v9 flat config):
+
     ```javascript
-    import js from '@eslint/js';
-    import typescript from '@typescript-eslint/eslint-plugin';
-    import typescriptParser from '@typescript-eslint/parser';
-    import react from 'eslint-plugin-react';
-    import reactHooks from 'eslint-plugin-react-hooks';
+    import js from "@eslint/js";
+    import typescript from "@typescript-eslint/eslint-plugin";
+    import typescriptParser from "@typescript-eslint/parser";
+    import react from "eslint-plugin-react";
+    import reactHooks from "eslint-plugin-react-hooks";
 
     export default [
       js.configs.recommended,
       {
-        files: ['**/*.{js,jsx,ts,tsx}'],
+        files: ["**/*.{js,jsx,ts,tsx}"],
         languageOptions: {
-          ecmaVersion: 'latest',
-          sourceType: 'module',
+          ecmaVersion: "latest",
+          sourceType: "module",
           parser: typescriptParser,
           parserOptions: {
             ecmaFeatures: { jsx: true },
           },
           globals: {
-            console: 'readonly',
-            window: 'readonly',
-            document: 'readonly',
-            HTMLButtonElement: 'readonly',
-            HTMLElement: 'readonly',
-            React: 'readonly',
+            console: "readonly",
+            window: "readonly",
+            document: "readonly",
+            HTMLButtonElement: "readonly",
+            HTMLElement: "readonly",
+            React: "readonly",
           },
         },
         plugins: {
-          '@typescript-eslint': typescript,
+          "@typescript-eslint": typescript,
           react: react,
-          'react-hooks': reactHooks,
+          "react-hooks": reactHooks,
         },
         rules: {
           ...typescript.configs.recommended.rules,
           ...react.configs.recommended.rules,
           ...reactHooks.configs.recommended.rules,
-          'react/prop-types': 'off',
-          '@typescript-eslint/no-unused-vars': 'warn',
-          'react/react-in-jsx-scope': 'off',
+          "react/prop-types": "off",
+          "@typescript-eslint/no-unused-vars": "warn",
+          "react/react-in-jsx-scope": "off",
         },
         settings: {
-          react: { version: 'detect' },
+          react: { version: "detect" },
         },
       },
     ];
     ```
 
 3.  **Install ESLint dependencies at root:**
+
     ```bash
     cd ../../..
     pnpm add -D -w eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-hooks @eslint/js
@@ -303,9 +314,7 @@ Run `pnpm init`. Then, edit the generated `package.json` to look like this. **Pa
       "require": "./dist/button.umd.js"
     }
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "vite build",
     "lint": "eslint src --max-warnings 0"
@@ -336,7 +345,7 @@ Manually add the workspace dependencies to package.json:
   // ... other fields
   "devDependencies": {
     "@your-scope/tsconfig": "workspace:*",
-    "@your-scope/eslint-config": "workspace:*",
+    "@your-scope/eslint-config": "workspace:*"
     // ... other dependencies
   }
 }
@@ -375,20 +384,20 @@ Create `packages/components/button/tsconfig.json`. **Note: Use standalone config
 Create `packages/components/button/eslint.config.js`:
 
 ```javascript
-import config from '@your-scope/eslint-config/react-library.js';
+import config from "@your-scope/eslint-config/react-library.js";
 
 export default [
   ...config,
   {
-    ignores: ['dist/**', 'node_modules/**', '*.config.js', '*.config.ts'],
+    ignores: ["dist/**", "node_modules/**", "*.config.js", "*.config.ts"],
   },
   {
-    files: ['src/**/*.{ts,tsx}'],
+    files: ["src/**/*.{ts,tsx}"],
     languageOptions: {
       globals: {
-        HTMLButtonElement: 'readonly',
-        HTMLElement: 'readonly',
-        React: 'readonly',
+        HTMLButtonElement: "readonly",
+        HTMLElement: "readonly",
+        React: "readonly",
       },
     },
   },
@@ -400,9 +409,9 @@ export default [
 Create `packages/components/button/vite.config.ts`. **Note: Use relative path instead of path module to avoid import issues:**
 
 ```typescript
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import dts from 'vite-plugin-dts';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import dts from "vite-plugin-dts";
 
 export default defineConfig({
   plugins: [
@@ -413,17 +422,17 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: './src/index.ts',
-      name: 'Button',
-      formats: ['es', 'umd'],
+      entry: "./src/index.ts",
+      name: "Button",
+      formats: ["es", "umd"],
       fileName: (format) => `button.${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: ["react", "react-dom"],
       output: {
         globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
+          react: "React",
+          "react-dom": "ReactDOM",
         },
       },
     },
@@ -436,13 +445,14 @@ export default defineConfig({
 Create `packages/components/button/src/Button.tsx`:
 
 ```tsx
-import React from 'react';
+import React from "react";
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**
    * Is this the principal call to action on the page?
    */
-  variant?: 'primary' | 'secondary';
+  variant?: "primary" | "secondary";
   /**
    * Button contents
    */
@@ -452,12 +462,26 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 /**
  * Primary UI component for user interaction
  */
-export const Button = ({ variant = 'primary', children, ...props }: ButtonProps) => {
-  const mode = variant === 'primary' ? 'bg-blue-500 hover:bg-blue-700' : 'bg-gray-500 hover:bg-gray-700';
+export const Button = ({
+  variant = "primary",
+  children,
+  ...props
+}: ButtonProps) => {
+  const mode =
+    variant === "primary"
+      ? "bg-blue-500 hover:bg-blue-700"
+      : "bg-gray-500 hover:bg-gray-700";
   return (
     <button
       type="button"
-      className={['text-white', 'font-bold', 'py-2', 'px-4', 'rounded', mode].join(' ')}
+      className={[
+        "text-white",
+        "font-bold",
+        "py-2",
+        "px-4",
+        "rounded",
+        mode,
+      ].join(" ")}
       {...props}
     >
       {children}
@@ -471,7 +495,7 @@ export const Button = ({ variant = 'primary', children, ...props }: ButtonProps)
 Create `packages/components/button/src/index.ts` to export your component:
 
 ```typescript
-export * from './Button';
+export * from "./Button";
 ```
 
 **Step 10: Test the Build and Lint**
@@ -565,29 +589,31 @@ Edit `apps/docs/package.json` to include your component packages and clean up un
 This is a **critical** step to ensure that when you edit a component in `packages/`, Storybook instantly updates.
 
 1.  **Modify `apps/docs/.storybook/main.ts`**:
-    We need to tell Vite to look at our component's *source code*, not its pre-compiled `dist` folder. We do this by creating a resolve alias.
+    We need to tell Vite to look at our component's _source code_, not its pre-compiled `dist` folder. We do this by creating a resolve alias.
 
     ```ts
     // apps/docs/.storybook/main.ts
-    import type { StorybookConfig } from '@storybook/react-vite';
-    import path from 'path'; // Import path
+    import type { StorybookConfig } from "@storybook/react-vite";
+    import path from "path"; // Import path
 
     const config: StorybookConfig = {
-      stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-      addons: [/* ... */],
+      stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
+      addons: [
+        /* ... */
+      ],
       framework: {
-        name: '@storybook/react-vite',
+        name: "@storybook/react-vite",
         options: {},
       },
       // Add this viteFinal config
       async viteFinal(config) {
-        const { mergeConfig } = await import('vite');
+        const { mergeConfig } = await import("vite");
         return mergeConfig(config, {
           resolve: {
             alias: {
-              '@your-scope/button': path.resolve(
+              "@your-scope/button": path.resolve(
                 __dirname,
-                '../../../packages/components/button/src/index.ts'
+                "../../../packages/components/button/src/index.ts",
               ),
               // Add a new alias here for every new component
             },
@@ -603,10 +629,12 @@ This is a **critical** step to ensure that when you edit a component in `package
 
     ```ts
     // apps/docs/.storybook/preview.ts
-    import type { Preview } from '@storybook/react-vite';
+    import type { Preview } from "@storybook/react-vite";
 
     const preview: Preview = {
-      parameters: { /* ... */ },
+      parameters: {
+        /* ... */
+      },
     };
 
     export default preview;
@@ -615,8 +643,9 @@ This is a **critical** step to ensure that when you edit a component in `package
 **Step 7: Create Documentation Content**
 
 1. **Create Introduction Page** (`apps/docs/src/stories/Introduction.mdx`):
+
    ```mdx
-   import { Meta } from '@storybook/blocks';
+   import { Meta } from "@storybook/blocks";
 
    <Meta title="POC Component Library/Introduction" />
 
@@ -633,17 +662,18 @@ This is a **critical** step to ensure that when you edit a component in `package
    ```
 
 2. **Create Button Stories** (`apps/docs/src/stories/Button.stories.tsx`):
+
    ```tsx
-   import type { Meta, StoryObj } from '@storybook/react-vite';
-   import { Button } from '@your-scope/button';
+   import type { Meta, StoryObj } from "@storybook/react-vite";
+   import { Button } from "@your-scope/button";
 
    const meta: Meta<typeof Button> = {
-     title: 'Components/Button',
+     title: "Components/Button",
      component: Button,
-     parameters: { layout: 'centered' },
-     tags: ['autodocs'],
+     parameters: { layout: "centered" },
+     tags: ["autodocs"],
      argTypes: {
-       variant: { control: 'radio', options: ['primary', 'secondary'] },
+       variant: { control: "radio", options: ["primary", "secondary"] },
      },
    };
 
@@ -652,15 +682,15 @@ This is a **critical** step to ensure that when you edit a component in `package
 
    export const Primary: Story = {
      args: {
-       variant: 'primary',
-       children: 'Primary Button',
+       variant: "primary",
+       children: "Primary Button",
      },
    };
 
    export const Secondary: Story = {
      args: {
-       variant: 'secondary',
-       children: 'Secondary Button',
+       variant: "secondary",
+       children: "Secondary Button",
      },
    };
    ```
@@ -685,6 +715,7 @@ Open `http://localhost:6006` in your browser. You should see your centralized co
 This is where we'll use Storybook to see and test our components.
 
 **Step 1: Create a Vite React App for Docs**
+
 ```bash
 # From the root of the project
 cd apps
@@ -693,13 +724,16 @@ pnpm create vite docs --template react-ts
 # Enter the new directory
 cd docs
 ```
+
 This will create a `docs` app with its own `package.json`.
 
 **Step 2: Install Storybook**
 Inside `apps/docs`, run the Storybook initializer:
+
 ```bash
 npx storybook@latest init
 ```
+
 When prompted, select `Vite` as the builder. This will install all necessary Storybook dependencies and create a `.storybook` directory.
 
 **Step 3: Clean Up and Configure the Docs App**
@@ -735,7 +769,8 @@ Let's adjust the `docs` package to be a pure documentation app.
       }
     }
     ```
-    *Run `pnpm install` in the `docs` directory after saving.*
+
+    _Run `pnpm install` in the `docs` directory after saving._
 
 2.  **Delete Unnecessary Files**:
     You can delete everything inside `apps/docs/src`. We will create our stories there.
@@ -745,29 +780,31 @@ Let's adjust the `docs` package to be a pure documentation app.
 This is a **critical** step to ensure that when you edit a component in `packages/`, Storybook instantly updates.
 
 1.  **Modify `apps/docs/.storybook/main.ts`**:
-    We need to tell Vite to look at our component's *source code*, not its pre-compiled `dist` folder. We do this by creating a resolve alias.
+    We need to tell Vite to look at our component's _source code_, not its pre-compiled `dist` folder. We do this by creating a resolve alias.
 
     ```ts
     // apps/docs/.storybook/main.ts
-    import type { StorybookConfig } from '@storybook/react-vite';
-    import path from 'path'; // Import path
+    import type { StorybookConfig } from "@storybook/react-vite";
+    import path from "path"; // Import path
 
     const config: StorybookConfig = {
-      stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-      addons: [/* ... */],
+      stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
+      addons: [
+        /* ... */
+      ],
       framework: {
-        name: '@storybook/react-vite',
+        name: "@storybook/react-vite",
         options: {},
       },
       // Add this viteFinal config
       async viteFinal(config) {
-        const { mergeConfig } = await import('vite');
+        const { mergeConfig } = await import("vite");
         return mergeConfig(config, {
           resolve: {
             alias: {
-              '@your-scope/button': path.resolve(
+              "@your-scope/button": path.resolve(
                 __dirname,
-                '../../../packages/components/button/src/index.ts'
+                "../../../packages/components/button/src/index.ts",
               ),
               // Add a new alias here for every new component
             },
@@ -783,10 +820,12 @@ This is a **critical** step to ensure that when you edit a component in `package
 
     ```ts
     // apps/docs/.storybook/preview.ts
-    import type { Preview } from '@storybook/react-vite';
+    import type { Preview } from "@storybook/react-vite";
 
     const preview: Preview = {
-      parameters: { /* ... */ },
+      parameters: {
+        /* ... */
+      },
     };
 
     export default preview;
@@ -799,16 +838,16 @@ Now let's create the actual story file to display our button.
 Create `apps/docs/src/stories/Button.stories.tsx`:
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button } from '@your-scope/button';
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Button } from "@your-scope/button";
 
 const meta: Meta<typeof Button> = {
-  title: 'Components/Button',
+  title: "Components/Button",
   component: Button,
-  parameters: { layout: 'centered' },
-  tags: ['autodocs'],
+  parameters: { layout: "centered" },
+  tags: ["autodocs"],
   argTypes: {
-    variant: { control: 'radio', options: ['primary', 'secondary'] },
+    variant: { control: "radio", options: ["primary", "secondary"] },
   },
 };
 
@@ -817,19 +856,20 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    variant: 'primary',
-    children: 'Primary Button',
+    variant: "primary",
+    children: "Primary Button",
   },
 };
 
 export const Secondary: Story = {
   args: {
-    variant: 'secondary',
-    children: 'Secondary Button',
+    variant: "secondary",
+    children: "Secondary Button",
   },
 };
 ```
-*Note the import from `@storybook/react-vite`, which is required by the linter.*
+
+_Note the import from `@storybook/react-vite`, which is required by the linter._
 
 ---
 
@@ -859,17 +899,21 @@ This is the final test. Let's install and use our button in a brand new, separat
 
 ## Theming System: Roadmap & Implementation
 
-This section describes how to add theme support to the component library, allowing style variables (such as color palettes) to be easily shared and switched across all components.
+This section describes how to add theme support to the component library,
+allowing style variables (such as color palettes) to be easily shared and
+switched across all components.
 
 ### 1. Project Structure & Theme Definition
 
 **a. Create a Theme System Directory**
+
 - Add a new directory: `packages/themes/`
 - Inside, create:
   - `default/` (for default themes)
   - `utils/` (for theme helpers, e.g., context, hooks)
 
 **b. Define Theme Shape**
+
 - Create a TypeScript interface for a theme (e.g., `Theme.ts`):
   ```ts
   export interface Theme {
@@ -888,6 +932,7 @@ This section describes how to add theme support to the component library, allowi
   ```
 
 **c. Add Default Themes**
+
 - In `packages/themes/default/`, create files like `atix.ts`, `banco-w.ts`, etc., each exporting a `Theme` object with color arrays as shown in the color palette example.
 
 ---
@@ -895,24 +940,45 @@ This section describes how to add theme support to the component library, allowi
 ### 2. Theme Provider Implementation
 
 **a. Create a Theme Context**
+
 - In `packages/themes/utils/ThemeProvider.tsx`:
   - Create a React context for the theme.
   - Provide a `ThemeProvider` component that accepts a `theme` prop and makes it available via context.
 
 **b. Create a Hook**
+
 - Add `useTheme()` hook to access the current theme in any component.
 
 **Example:**
+
 ```tsx
 // ThemeProvider.tsx
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import { Theme } from '../Theme';
 
 const ThemeContext = createContext<Theme | undefined>(undefined);
 
-export const ThemeProvider: React.FC<{ theme: Theme; children: React.ReactNode }> = ({ theme, children }) => (
-  <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
-);
+export const ThemeProvider: React.FC<{
+  theme: Theme;
+  children: React.ReactNode;
+}> = ({ theme, children }) => {
+  // Generate CSS variables from theme
+  useEffect(() => {
+    const root = document.documentElement;
+    
+    // Generate CSS variables for each color array
+    Object.entries(theme.colors).forEach(([colorName, colorArray]) => {
+      colorArray.forEach((color, index) => {
+        const shade = index * 100; // 0, 100, 200, 300, etc.
+        root.style.setProperty(`--color-${colorName}-${shade}`, color);
+      });
+    });
+  }, [theme]);
+
+  return (
+    <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
+  );
+};
 
 export const useTheme = () => {
   const ctx = useContext(ThemeContext);
@@ -925,33 +991,132 @@ export const useTheme = () => {
 
 ### 3. Component Integration
 
-**a. Refactor Components to Use Theme**
-- Replace hardcoded colors with values from `useTheme()`.
-- Example:
-  ```tsx
-  const { colors } = useTheme();
-  <button style={{ background: colors.primary[500] }}>Click me</button>
-  ```
+**a. Generate CSS Variables from Theme**
 
-**b. Support for SCSS/CSS Variables (Optional)**
-- If using SCSS modules, generate CSS variables from the theme and inject them at the root or component level.
+Since this project uses SCSS modules, we'll generate CSS variables from the theme and inject them into the DOM:
+
+```tsx
+// packages/themes/utils/ThemeProvider.tsx
+import React, { createContext, useContext, useEffect } from 'react';
+import { Theme } from '../Theme';
+
+const ThemeContext = createContext<Theme | undefined>(undefined);
+
+export const ThemeProvider: React.FC<{ theme: Theme; children: React.ReactNode }> = 
+  ({ theme, children }) => {
+    // Generate CSS variables from theme
+    useEffect(() => {
+      const root = document.documentElement;
+      
+      // Generate CSS variables for each color array
+      Object.entries(theme.colors).forEach(([colorName, colorArray]) => {
+        colorArray.forEach((color, index) => {
+          const shade = index * 100; // 0, 100, 200, 300, etc.
+          root.style.setProperty(`--color-${colorName}-${shade}`, color);
+        });
+      });
+    }, [theme]);
+
+    return (
+      <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
+    );
+  };
+
+export const useTheme = () => {
+  const ctx = useContext(ThemeContext);
+  if (!ctx) throw new Error('useTheme must be used within a ThemeProvider');
+  return ctx;
+};
+```
+
+**b. Update Components to Use CSS Variables in SCSS**
+
+Refactor component SCSS modules to use the generated CSS variables:
+
+```scss
+// packages/components/button/src/Button.module.scss
+.button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  
+  &.primary {
+    background-color: var(--color-primary-500);
+    color: white;
+    
+    &:hover {
+      background-color: var(--color-primary-600);
+    }
+    
+    &:active {
+      background-color: var(--color-primary-700);
+    }
+  }
+  
+  &.secondary {
+    background-color: var(--color-secondary-200);
+    color: var(--color-secondary-800);
+    
+    &:hover {
+      background-color: var(--color-secondary-300);
+    }
+    
+    &:active {
+      background-color: var(--color-secondary-400);
+    }
+  }
+}
+```
+
+**c. Update Component Implementation**
+
+```tsx
+// packages/components/button/src/Button.tsx
+import React from 'react';
+import styles from './Button.module.scss';
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'secondary';
+  children: React.ReactNode;
+}
+
+export const Button = ({ variant = 'primary', children, className, ...props }: ButtonProps) => {
+  const combinedClassName = [
+    styles.button,
+    styles[variant],
+    className
+  ].filter(Boolean).join(' ');
+  
+  return (
+    <button className={combinedClassName} {...props}>
+      {children}
+    </button>
+  );
+};
+```
 
 ---
 
 ### 4. Applying and Switching Themes
 
 **a. Usage in App**
+
 - Wrap your app (or Storybook preview) with `ThemeProvider` and pass a theme:
+
   ```tsx
-  import { ThemeProvider } from '@poc/themes/utils/ThemeProvider';
-  import { atixTheme } from '@poc/themes/default/atix';
+  import { ThemeProvider } from "@poc/themes/utils/ThemeProvider";
+  import { atixTheme } from "@poc/themes/default/atix";
 
   <ThemeProvider theme={atixTheme}>
     <App />
-  </ThemeProvider>
+  </ThemeProvider>;
   ```
 
 **b. Switching Themes**
+
 - Allow dynamic switching by updating the `theme` prop on `ThemeProvider` (e.g., via a dropdown).
 
 ---
@@ -959,19 +1124,22 @@ export const useTheme = () => {
 ### 5. Providing Default Themes
 
 **a. Export Default Themes**
+
 - Export all default themes from `@poc/themes` for easy import:
   ```ts
-  export { atixTheme } from './default/atix';
-  export { bancoWTheme } from './default/banco-w';
+  export { atixTheme } from "./default/atix";
+  export { bancoWTheme } from "./default/banco-w";
   // etc.
   ```
 
 **b. Document Usage**
-- In your docs, show how to import and use a default theme:
-  ```tsx
-  import { ThemeProvider, atixTheme } from '@poc/themes';
 
-  <ThemeProvider theme={atixTheme}>...</ThemeProvider>
+- In your docs, show how to import and use a default theme:
+
+  ```tsx
+  import { ThemeProvider, atixTheme } from "@poc/themes";
+
+  <ThemeProvider theme={atixTheme}>...</ThemeProvider>;
   ```
 
 ---
@@ -986,14 +1154,14 @@ export const useTheme = () => {
 
 ### Summary Table
 
-| Step | Description | Outcome |
-|------|-------------|---------|
-| 1    | Define theme structure & default themes | Consistent theme objects |
-| 2    | Implement ThemeProvider & hook | Easy theme access in components |
-| 3    | Refactor components | Components use theme variables |
-| 4    | Apply/switch themes | Theming at app or story level |
-| 5    | Export/document default themes | Easy adoption for users |
-| 6    | Update docs/Storybook | Clear usage and preview |
+| Step | Description                             | Outcome                         |
+| ---- | --------------------------------------- | ------------------------------- |
+| 1    | Define theme structure & default themes | Consistent theme objects        |
+| 2    | Implement ThemeProvider & hook          | Easy theme access in components |
+| 3    | Refactor components                     | Components use theme variables  |
+| 4    | Apply/switch themes                     | Theming at app or story level   |
+| 5    | Export/document default themes          | Easy adoption for users         |
+| 6    | Update docs/Storybook                   | Clear usage and preview         |
 
 ---
 
@@ -1015,17 +1183,80 @@ In your application codebase (not in the library), define your theme object matc
 
 ```ts
 // src/theme/myTheme.ts
-import type { Theme } from '@your-scope/themes';
+import type { Theme } from "@your-scope/themes";
 
 export const myTheme: Theme = {
   colors: {
-    primary: ['#001F3F', '#003366', '#00509E', '#0074D9', '#339CFF', '#66B2FF', '#99CCFF', '#CCE6FF'],
-    secondary: ['#FFDC00', '#FFE066', '#FFF3BF', '#FFF9E3', '#FFFBEA', '#FFFDF2', '#FFFFF8', '#FFFFFC'],
-    tertiary: ['#2ECC40', '#51D88A', '#A3E635', '#D9F99D', '#F0FDF4', '#F7FEE7', '#ECFDF5', '#F0FDF4'],
-    success: ['#28a745', '#51cf66', '#69db7c', '#b2f2bb', '#d3f9d8', '#e6fcf5', '#f8f9fa', '#f1f3f5'],
-    warning: ['#ffc107', '#ffe066', '#fff3bf', '#fff9db', '#fffbe6', '#fffdf2', '#fffef8', '#fffffc'],
-    error: ['#dc3545', '#ff6b6b', '#ffa8a8', '#ffe3e3', '#fff5f5', '#fff0f0', '#fff8f8', '#fffafa'],
-    info: ['#17a2b8', '#63e6be', '#a5d8ff', '#d0ebff', '#e3fafc', '#f1f3f5', '#f8f9fa', '#f1f3f5'],
+    primary: [
+      "#001F3F",
+      "#003366",
+      "#00509E",
+      "#0074D9",
+      "#339CFF",
+      "#66B2FF",
+      "#99CCFF",
+      "#CCE6FF",
+    ],
+    secondary: [
+      "#FFDC00",
+      "#FFE066",
+      "#FFF3BF",
+      "#FFF9E3",
+      "#FFFBEA",
+      "#FFFDF2",
+      "#FFFFF8",
+      "#FFFFFC",
+    ],
+    tertiary: [
+      "#2ECC40",
+      "#51D88A",
+      "#A3E635",
+      "#D9F99D",
+      "#F0FDF4",
+      "#F7FEE7",
+      "#ECFDF5",
+      "#F0FDF4",
+    ],
+    success: [
+      "#28a745",
+      "#51cf66",
+      "#69db7c",
+      "#b2f2bb",
+      "#d3f9d8",
+      "#e6fcf5",
+      "#f8f9fa",
+      "#f1f3f5",
+    ],
+    warning: [
+      "#ffc107",
+      "#ffe066",
+      "#fff3bf",
+      "#fff9db",
+      "#fffbe6",
+      "#fffdf2",
+      "#fffef8",
+      "#fffffc",
+    ],
+    error: [
+      "#dc3545",
+      "#ff6b6b",
+      "#ffa8a8",
+      "#ffe3e3",
+      "#fff5f5",
+      "#fff0f0",
+      "#fff8f8",
+      "#fffafa",
+    ],
+    info: [
+      "#17a2b8",
+      "#63e6be",
+      "#a5d8ff",
+      "#d0ebff",
+      "#e3fafc",
+      "#f1f3f5",
+      "#f8f9fa",
+      "#f1f3f5",
+    ],
     // ...other color scales as needed
   },
   // Add other variables as needed (typography, spacing, etc.)
@@ -1037,8 +1268,8 @@ export const myTheme: Theme = {
 In your app's root (e.g., `App.tsx` or `main.tsx`):
 
 ```tsx
-import { ThemeProvider } from '@your-scope/themes';
-import { myTheme } from './theme/myTheme';
+import { ThemeProvider } from "@your-scope/themes";
+import { myTheme } from "./theme/myTheme";
 
 function App() {
   return (
@@ -1059,8 +1290,8 @@ All components from the library that use the theme context will now automaticall
 
 ### Notes for Custom Theme Implementation
 
-- **You do NOT need to modify the library source.**  
-- **You do NOT need to add your theme to the library's `themes` folder.**  
+- **You do NOT need to modify the library source.**
+- **You do NOT need to add your theme to the library's `themes` folder.**
 - You only need to match the `Theme` interface exported by the library.
 - You can keep your theme file anywhere in your app codebase.
 
