@@ -35,6 +35,9 @@ importers:
       '@poc/button':
         specifier: workspace:*
         version: link:../../packages/components/button
+      '@poc/themes':
+        specifier: workspace:*
+        version: link:../../packages/themes
       react:
         specifier: ^19.1.0
         version: 19.1.0

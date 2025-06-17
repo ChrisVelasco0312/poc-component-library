@@ -16,7 +16,7 @@
   &:focus {
     outline: 2px solid transparent;
     outline-offset: 2px;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 0 2px var(--color-primary-500);
   }
 
   &:disabled {
@@ -27,28 +27,28 @@
 
 // Primary variant
 .primary {
-  background-color: #3b82f6;
+  background-color: var(--color-primary-500);
   color: white;
 
   &:hover:not(:disabled) {
-    background-color: #2563eb;
+    background-color: var(--color-primary-600);
   }
 
   &:active:not(:disabled) {
-    background-color: #1d4ed8;
+    background-color: var(--color-primary-700);
   }
 }
 
 // Secondary variant
 .secondary {
-  background-color: #6b7280;
-  color: white;
+  background-color: var(--color-secondary-200);
+  color: var(--color-secondary-800);
 
   &:hover:not(:disabled) {
-    background-color: #4b5563;
+    background-color: var(--color-secondary-300);
   }
 
   &:active:not(:disabled) {
-    background-color: #374151;
+    background-color: var(--color-secondary-400);
   }
 }

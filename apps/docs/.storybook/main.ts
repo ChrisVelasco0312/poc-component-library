@@ -40,6 +40,10 @@ const config: StorybookConfig = {
             __dirname,
             '../../../packages/components/button/src/index.ts'
           ),
+          '@poc/themes': path.resolve(
+            __dirname,
+            '../../../packages/themes/index.ts'
+          ),
         },
       },
     });

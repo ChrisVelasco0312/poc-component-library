@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button } from '@poc/button';
+import { ThemeProvider, oceanTheme, forestTheme } from '@poc/themes';
+import React from 'react';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
@@ -25,6 +27,13 @@ export const Primary: Story = {
     variant: 'primary',
     children: 'Primary Button',
   },
+  decorators: [
+    (Story) => (
+      <ThemeProvider theme={oceanTheme}>
+        <Story />
+      </ThemeProvider>
+    ),
+  ],
 };
 
 export const Secondary: Story = {
@@ -32,6 +41,13 @@ export const Secondary: Story = {
     variant: 'secondary',
     children: 'Secondary Button',
   },
+  decorators: [
+    (Story) => (
+      <ThemeProvider theme={oceanTheme}>
+        <Story />
+      </ThemeProvider>
+    ),
+  ],
 };
 
 export const WithClickHandler: Story = {
@@ -40,6 +56,13 @@ export const WithClickHandler: Story = {
     children: 'Click me!',
     onClick: () => alert('Button clicked!'),
   },
+  decorators: [
+    (Story) => (
+      <ThemeProvider theme={oceanTheme}>
+        <Story />
+      </ThemeProvider>
+    ),
+  ],
 };
 
 export const Disabled: Story = {
@@ -48,4 +71,28 @@ export const Disabled: Story = {
     children: 'Disabled Button',
     disabled: true,
   },
+  decorators: [
+    (Story) => (
+      <ThemeProvider theme={oceanTheme}>
+        <Story />
+      </ThemeProvider>
+    ),
+  ],
+};
+
+export const WithForestTheme: Story = {
+  args: {
+    variant: 'primary',
+    children: 'Forest Theme Button',
+  },
+  decorators: [
+    (Story) => (
+      <ThemeProvider theme={forestTheme}>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', padding: '1rem' }}>
+          <Story />
+          <Button variant="secondary">Forest Secondary</Button>
+        </div>
+      </ThemeProvider>
+    ),
+  ],
 }; 
