@@ -1,0 +1,59 @@
+{
+  "name": "@poc/components",
+  "version": "0.0.0",
+  "description": "Complete POC component library",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.esm.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc && vite build",
+    "lint": "eslint src --max-warnings 0"
+  },
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "design-system"
+  ],
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cavelasco/poc-component-library.git",
+    "directory": "packages/components"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "dependencies": {
+    "@poc/button": "workspace:*"
+  },
+  "devDependencies": {
+    "@poc/tsconfig": "workspace:*",
+    "@poc/eslint-config": "workspace:*",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.8.3",
+    "vite": "^6.0.1",
+    "vite-plugin-dts": "^4.5.4"
+  },
+  "peerDependencies": {
+    "react": "^19.1.0"
+  }
+} 

@@ -34,7 +34,7 @@ importers:
     dependencies:
       '@poc/button':
         specifier: workspace:*
-        version: link:../../packages/components/button
+        version: link:../../packages/button
       '@poc/themes':
         specifier: workspace:*
         version: link:../../packages/themes
@@ -73,14 +73,14 @@ importers:
         specifier: ^6.3.5
         version: 6.3.5(@types/node@24.0.1)(sass@1.89.2)
 
-  packages/components/button:
+  packages/button:
     devDependencies:
       '@poc/eslint-config':
         specifier: workspace:*
-        version: link:../../config/eslint
+        version: link:../config/eslint
       '@poc/tsconfig':
         specifier: workspace:*
-        version: link:../../config/tsconfig
+        version: link:../config/tsconfig
       '@types/node':
         specifier: ^24.0.1
         version: 24.0.1
@@ -101,6 +101,34 @@ importers:
         version: 5.8.3
       vite:
         specifier: ^6.3.5
+        version: 6.3.5(@types/node@24.0.1)(sass@1.89.2)
+      vite-plugin-dts:
+        specifier: ^4.5.4
+        version: 4.5.4(@types/node@24.0.1)(rollup@4.43.0)(typescript@5.8.3)(vite@6.3.5(@types/node@24.0.1)(sass@1.89.2))
+
+  packages/components:
+    dependencies:
+      '@poc/button':
+        specifier: workspace:*
+        version: link:../button
+      react:
+        specifier: ^19.1.0
+        version: 19.1.0
+    devDependencies:
+      '@poc/eslint-config':
+        specifier: workspace:*
+        version: link:../config/eslint
+      '@poc/tsconfig':
+        specifier: workspace:*
+        version: link:../config/tsconfig
+      '@vitejs/plugin-react':
+        specifier: ^4.3.4
+        version: 4.5.2(vite@6.3.5(@types/node@24.0.1)(sass@1.89.2))
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+      vite:
+        specifier: ^6.0.1
         version: 6.3.5(@types/node@24.0.1)(sass@1.89.2)
       vite-plugin-dts:
         specifier: ^4.5.4

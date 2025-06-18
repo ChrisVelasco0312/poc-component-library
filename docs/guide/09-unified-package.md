@@ -11,12 +11,26 @@ This phase creates a unified `@poc/components` package that bundles all individu
 
 ## Step 1: Create the Unified Package Structure
 
+**Important**: This assumes you already have individual component packages at the root level (e.g., `packages/button/`, `packages/input/`). The unified package should be a sibling, not a parent, of individual components.
+
 ```bash
-# Create the unified package directory
+# Create the unified package directory (if it doesn't exist)
 mkdir -p packages/components/src
 
 # Navigate to the components directory
 cd packages/components
+```
+
+**Recommended Project Structure:**
+```
+packages/
+├── components/          # ← Unified package (this is what we're creating)
+├── button/              # ← Individual button package
+├── input/               # ← Individual input package (future)
+├── themes/              # ← Theme system
+└── config/              # ← Shared configurations
+    ├── tsconfig/
+    └── eslint/
 ```
 
 ## Step 2: Initialize the Unified Package
@@ -163,6 +177,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@poc/button": resolve(__dirname, "../button/src"),
+      // Future components will be added here:
+      // "@poc/input": resolve(__dirname, "../input/src"),
     },
   },
 });
@@ -240,9 +256,9 @@ packages:
   - "apps/*"
   - "packages/*"
   - "packages/config/*"
-  - "packages/components/*"
-  - "packages/components" # Add this line for the unified package
 ```
+
+**Note**: With the flattened structure, the workspace configuration becomes much simpler. All packages (individual components, unified package, themes, config) are siblings under `packages/*`.
 
 ## Step 9: Update Turborepo Configuration
 
@@ -430,6 +446,7 @@ resolve: {
   alias: {
     "@poc/button": resolve(__dirname, "../button/src"),
     "@poc/input": resolve(__dirname, "../input/src"),
+    // Add more components here as you create them
   },
 },
 ```

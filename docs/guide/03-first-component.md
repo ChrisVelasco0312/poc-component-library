@@ -5,11 +5,11 @@ Now we create our first reusable component as its own package. **Important: Comp
 ## Step 1: Create the `button` Package
 
 ```bash
-# Create the package directory
-mkdir -p packages/components/button/src
+# Create the package directory (flattened structure)
+mkdir -p packages/button/src
 
 # Navigate into it
-cd packages/components/button
+cd packages/button
 ```
 
 ## Step 2: Initialize `package.json`
@@ -51,7 +51,7 @@ Run `pnpm init`. Then, edit the generated `package.json` to look like this. **Pa
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cavelasco/poc-component-library.git",
-    "directory": "packages/components/button"
+    "directory": "packages/button"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
@@ -85,7 +85,7 @@ Manually add the workspace dependencies to package.json, then run `pnpm install`
 
 ## Step 5: Configure TypeScript for the `button` Package
 
-Create `packages/components/button/tsconfig.json`. **Note: Use standalone config to avoid path resolution issues:**
+Create `packages/button/tsconfig.json`. **Note: Use standalone config to avoid path resolution issues:**
 
 ```json
 {
@@ -111,7 +111,7 @@ Create `packages/components/button/tsconfig.json`. **Note: Use standalone config
 
 ## Step 6: Configure ESLint for the `button` Package
 
-Create `packages/components/button/eslint.config.js`:
+Create `packages/button/eslint.config.js`:
 
 ```javascript
 import config from "@poc/eslint-config/react-library.js";
@@ -136,7 +136,7 @@ export default [
 
 ## Step 7: Configure Vite for Library Bundling
 
-Create `packages/components/button/vite.config.ts`. **Note: Use relative path instead of path module to avoid import issues:**
+Create `packages/button/vite.config.ts`. **Note: Use relative path instead of path module to avoid import issues:**
 
 ```typescript
 import { defineConfig } from "vite";
@@ -172,7 +172,7 @@ export default defineConfig({
 
 ## Step 8: Create the React Component
 
-Create `packages/components/button/src/Button.tsx`:
+Create `packages/button/src/Button.tsx`:
 
 ```tsx
 import React from "react";
@@ -215,7 +215,7 @@ export const Button = ({
 
 ## Step 9: Create Button Styles with Theme Integration
 
-Create `packages/components/button/src/Button.module.scss`:
+Create `packages/button/src/Button.module.scss`:
 
 ```scss
 // Button base styles
@@ -284,7 +284,7 @@ Create `packages/components/button/src/Button.module.scss`:
 
 ## Step 10: Create the Package Entry Point
 
-Create `packages/components/button/src/index.ts` to export your component:
+Create `packages/button/src/index.ts` to export your component:
 
 ```typescript
 export * from "./Button";
@@ -304,7 +304,7 @@ npx turbo build --filter=@poc/button
 pnpm lint
 ```
 
-You should see a new `dist` folder inside `packages/components/button` containing the bundled JS and type definition files, and no linting errors. Success!
+You should see a new `dist` folder inside `packages/button` containing the bundled JS and type definition files, and no linting errors. Success!
 
 ## What We've Built
 

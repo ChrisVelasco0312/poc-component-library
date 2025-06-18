@@ -106,9 +106,13 @@ const config: StorybookConfig = {
         alias: {
           "@poc/button": path.resolve(
             __dirname,
-            "../../../packages/components/button/src/index.ts",
+            "../../../packages/button/src/index.ts",
           ),
           // Add a new alias here for every new component
+          // "@poc/input": path.resolve(
+          //   __dirname,
+          //   "../../../packages/input/src/index.ts",
+          // ),
         },
       },
     });
