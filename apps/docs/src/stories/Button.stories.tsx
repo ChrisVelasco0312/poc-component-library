@@ -95,4 +95,36 @@ export const WithForestTheme: Story = {
       </ThemeProvider>
     ),
   ],
+};
+
+export const WithoutTheme: Story = {
+  args: {
+    variant: 'primary',
+    children: 'No Theme (Uses Fallbacks)',
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', padding: '1rem' }}>
+        <Story />
+        <Button variant="secondary">Secondary Fallback</Button>
+      </div>
+    ),
+  ],
+};
+
+export const WithDefaultTheme: Story = {
+  args: {
+    variant: 'primary',
+    children: 'Default Theme',
+  },
+  decorators: [
+    (Story) => (
+      <ThemeProvider>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', padding: '1rem' }}>
+          <Story />
+          <Button variant="secondary">Default Secondary</Button>
+        </div>
+      </ThemeProvider>
+    ),
+  ],
 }; 

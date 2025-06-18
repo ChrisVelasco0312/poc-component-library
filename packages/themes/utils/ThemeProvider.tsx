@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useRef, useEffect } from 'react';
 import { Theme } from '../Theme';
+import { defaultTheme } from '../defaultTheme';
 
-const ThemeContext = createContext<Theme | undefined>(undefined);
+const ThemeContext = createContext<Theme>(defaultTheme);
 
 export const ThemeProvider: React.FC<{
-  theme: Theme;
+  theme?: Theme; // Make theme optional
   children: React.ReactNode;
-}> = ({ theme, children }) => {
+}> = ({ theme = defaultTheme, children }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Generate CSS variables from theme
@@ -36,6 +37,6 @@ export const ThemeProvider: React.FC<{
 
 export const useTheme = () => {
   const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error('useTheme must be used within a ThemeProvider');
+  // No need to check for undefined since we provide a default theme
   return ctx;
 }; 
