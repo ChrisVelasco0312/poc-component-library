@@ -1,9 +1,13 @@
+# Component Library Implementation Guide
+
+This is a step-by-step guide to implementing a component library with theming. This guide will walk you through building a production-ready component library that supports theming and can be distributed as npm packages.
+
 ### Prerequisites
 
 1.  **Node.js & pnpm:** Make sure you have Node.js (v18+) and pnpm installed. If not: `npm install -g pnpm`.
 2.  **Git & GitHub Account:** You need a GitHub account and Git installed.
 3.  **Code Editor:** VS Code or any other modern editor.
-4.  **GitHub Scope:** Your "scope" will be your GitHub username or organization name. For this guide, I will use the placeholder **`@your-scope`**. **You must replace this everywhere it appears.**
+4.  **GitHub Scope:** Your "scope" will be your GitHub username or organization name. For this guide, we use the **`@poc`** scope which matches the actual project structure.
 
 ---
 
@@ -148,11 +152,11 @@ This is a key monorepo pattern. We define configs once and extend them in our pa
     pnpm init
     ```
 
-    In `packages/config/tsconfig/package.json`, set the name to `@your-scope/tsconfig` and make it private.
+    In `packages/config/tsconfig/package.json`, set the name to `@poc/tsconfig` and make it private.
 
     ```json
     {
-      "name": "@your-scope/tsconfig",
+      "name": "@poc/tsconfig",
       "version": "0.0.0",
       "private": true,
       "files": ["react-library.json"]
@@ -200,7 +204,7 @@ This is a key monorepo pattern. We define configs once and extend them in our pa
 
     ```json
     {
-      "name": "@your-scope/eslint-config",
+      "name": "@poc/eslint-config",
       "version": "0.0.0",
       "private": true,
       "type": "module",
@@ -301,7 +305,7 @@ Run `pnpm init`. Then, edit the generated `package.json` to look like this. **Pa
 ```json
 // packages/components/button/package.json
 {
-  "name": "@your-scope/button",
+  "name": "@poc/button",
   "version": "0.0.0",
   "description": "A simple button component",
   "type": "module",
@@ -310,11 +314,20 @@ Run `pnpm init`. Then, edit the generated `package.json` to look like this. **Pa
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/button.es.js",
-      "require": "./dist/button.umd.js"
-    }
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/button.es.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/button.umd.js"
+      }
+    },
+    "./dist/button.css": "./dist/button.css"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "vite build",
     "lint": "eslint src --max-warnings 0"
@@ -322,8 +335,25 @@ Run `pnpm init`. Then, edit the generated `package.json` to look like this. **Pa
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cavelasco/poc-component-library.git",
+    "directory": "packages/components/button"
+  },
   "publishConfig": {
-    "access": "restricted"
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "devDependencies": {
+    "@poc/tsconfig": "workspace:*",
+    "@poc/eslint-config": "workspace:*",
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.1",
+    "vite-plugin-dts": "^3.0.0",
+    "@types/react": "^19.1.0",
+    "@types/node": "^20.1.0"
+  },
+  "peerDependencies": {
+    "react": "^19.1.0"
   }
 }
 ```
@@ -344,9 +374,13 @@ Manually add the workspace dependencies to package.json:
 {
   // ... other fields
   "devDependencies": {
-    "@your-scope/tsconfig": "workspace:*",
-    "@your-scope/eslint-config": "workspace:*"
-    // ... other dependencies
+    "@poc/tsconfig": "workspace:*",
+    "@poc/eslint-config": "workspace:*",
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.1",
+    "vite-plugin-dts": "^3.0.0",
+    "@types/react": "^19.1.0",
+    "@types/node": "^20.1.0"
   }
 }
 ```
@@ -384,7 +418,7 @@ Create `packages/components/button/tsconfig.json`. **Note: Use standalone config
 Create `packages/components/button/eslint.config.js`:
 
 ```javascript
-import config from "@your-scope/eslint-config/react-library.js";
+import config from "@poc/eslint-config/react-library.js";
 
 export default [
   ...config,
@@ -504,9 +538,9 @@ Go to the root of the monorepo (`cd ../../..`) and run:
 
 ```bash
 # Test build
-pnpm --filter @your-scope/button build
+pnpm --filter @poc/button build
 # OR using Turborepo
-npx turbo build --filter=@your-scope/button
+npx turbo build --filter=@poc/button
 
 # Test linting
 pnpm lint
@@ -567,7 +601,7 @@ Edit `apps/docs/package.json` to include your component packages and clean up un
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@your-scope/button": "workspace:*",
+    "@poc/button": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -611,7 +645,7 @@ This is a **critical** step to ensure that when you edit a component in `package
         return mergeConfig(config, {
           resolve: {
             alias: {
-              "@your-scope/button": path.resolve(
+              "@poc/button": path.resolve(
                 __dirname,
                 "../../../packages/components/button/src/index.ts",
               ),
@@ -665,7 +699,7 @@ This is a **critical** step to ensure that when you edit a component in `package
 
    ```tsx
    import type { Meta, StoryObj } from "@storybook/react-vite";
-   import { Button } from "@your-scope/button";
+   import { Button } from "@poc/button";
 
    const meta: Meta<typeof Button> = {
      title: "Components/Button",
@@ -740,7 +774,7 @@ When prompted, select `Vite` as the builder. This will install all necessary Sto
 Let's adjust the `docs` package to be a pure documentation app.
 
 1.  **Modify `apps/docs/package.json`**:
-    Add your `@your-scope/button` as a dependency. We also need `vite` and `globals` for our Storybook configuration.
+    Add your `@poc/button` as a dependency. We also need `vite` and `globals` for our Storybook configuration.
 
     ```json
     {
@@ -753,7 +787,7 @@ Let's adjust the `docs` package to be a pure documentation app.
         "build-storybook": "storybook build"
       },
       "dependencies": {
-        "@your-scope/button": "workspace:*",
+        "@poc/button": "workspace:*",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
       },
@@ -802,7 +836,7 @@ This is a **critical** step to ensure that when you edit a component in `package
         return mergeConfig(config, {
           resolve: {
             alias: {
-              "@your-scope/button": path.resolve(
+              "@poc/button": path.resolve(
                 __dirname,
                 "../../../packages/components/button/src/index.ts",
               ),
@@ -839,7 +873,7 @@ Create `apps/docs/src/stories/Button.stories.tsx`:
 
 ```tsx
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button } from "@your-scope/button";
+import { Button } from "@poc/button";
 
 const meta: Meta<typeof Button> = {
   title: "Components/Button",
@@ -1136,9 +1170,9 @@ If you are using this component library in your own application and want to appl
 ### 1. **Install the Library**
 
 ```bash
-pnpm add @your-scope/components @your-scope/themes
+pnpm add @poc/button @poc/themes
 # or
-npm install @your-scope/components @your-scope/themes
+npm install @poc/button @poc/themes
 ```
 
 ### 2. **Create Your Theme Object in Your App**
@@ -1147,7 +1181,7 @@ In your application codebase (not in the library), define your theme object matc
 
 ```ts
 // src/theme/myTheme.ts
-import type { Theme } from "@your-scope/themes";
+import type { Theme } from "@poc/themes";
 
 export const myTheme: Theme = {
   colors: {
@@ -1232,7 +1266,7 @@ export const myTheme: Theme = {
 In your app's root (e.g., `App.tsx` or `main.tsx`):
 
 ```tsx
-import { ThemeProvider } from "@your-scope/themes";
+import { ThemeProvider } from "@poc/themes";
 import { myTheme } from "./theme/myTheme";
 
 function App() {
@@ -1282,3 +1316,744 @@ my-app/
 - **Color arrays:** Each color (primary, secondary, etc.) should be an array of shades, from darkest to lightest.
 - **Extend as needed:** You can add more variables (typography, spacing, border radius, etc.) to the `Theme` interface.
 - **Type safety:** TypeScript will help you catch any missing or misnamed fields.
+
+---
+
+## **Publishing and Distribution Strategy**
+
+This section covers the complete publishing workflow for your component library using GitHub as the primary distribution method, avoiding the npm registry.
+
+### **Overview of the Publishing Strategy**
+
+We'll use GitHub as our package registry, which provides:
+- **Private/Public Control:** Keep your packages private or make them public
+- **No npm Registry Dependency:** Avoid npm registry limitations and costs
+- **GitHub Integration:** Seamless CI/CD with GitHub Actions
+- **Access Control:** Use GitHub's robust permission system
+- **Version Management:** Git tags for version control
+
+### **Phase 1: Preparing for Publication**
+
+#### **Step 1: Configure Package Registry Settings**
+
+First, configure npm to use GitHub Package Registry for your scope:
+
+**Create/Update `.npmrc` in your project root:**
+
+```bash
+# .npmrc
+@poc:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
+registry=https://registry.npmjs.org/
+```
+
+**Update each package's `package.json`:**
+
+For each package in `packages/`, ensure the following configuration:
+
+```json
+{
+  "name": "@poc/package-name",
+  "version": "1.0.0",
+  "description": "Your package description",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cavelasco/poc-component-library.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "private": false
+}
+```
+
+#### **Step 2: Build Configuration for Publishing**
+
+Ensure all packages have proper build configurations. Update your root `package.json`:
+
+```json
+{
+  "scripts": {
+    "build": "npx turbo build",
+    "build:packages": "npx turbo build --filter='./packages/*'",
+    "publish:prepare": "pnpm build:packages",
+    "publish:all": "pnpm changeset publish",
+    "version": "pnpm changeset version"
+  }
+}
+```
+
+#### **Step 3: Install and Configure Changesets**
+
+Changesets will help manage versions and changelogs across the monorepo:
+
+```bash
+# Install changesets
+pnpm add -D -w @changesets/cli @changesets/changelog-github
+
+# Initialize changesets
+pnpm changeset init
+```
+
+**Configure `.changeset/config.json`:**
+
+```json
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
+  "changelog": [
+    "@changesets/changelog-github",
+         {
+       "repo": "cavelasco/poc-component-library"
+     }
+  ],
+  "commit": false,
+  "fixed": [],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": []
+}
+```
+
+### **Phase 2: Versioning Strategy**
+
+#### **Semantic Versioning Plan**
+
+We'll follow semantic versioning (semver) with the following strategy:
+
+- **MAJOR (X.0.0):** Breaking changes that require consumer code updates
+- **MINOR (0.X.0):** New features that are backward compatible
+- **PATCH (0.0.X):** Bug fixes and small improvements
+
+#### **Version Management Workflow**
+
+**1. Creating a Changeset:**
+
+When making changes, create a changeset to document them:
+
+```bash
+# Create a changeset for your changes
+pnpm changeset
+
+# Follow the prompts:
+# - Select which packages are affected
+# - Choose the type of change (major/minor/patch)
+# - Write a summary of changes
+```
+
+**2. Version Bumping:**
+
+```bash
+# When ready to release, update versions
+pnpm changeset version
+
+# This will:
+# - Update package.json versions
+# - Update dependencies
+# - Generate/update CHANGELOG.md files
+# - Consume changeset files
+```
+
+**3. Git Workflow Integration:**
+
+```bash
+# After version bump, commit and tag
+git add .
+git commit -m "chore: release packages"
+git push origin main
+
+# Changesets will create appropriate git tags
+# Format: @scope/package-name@version
+```
+
+#### **Branch Strategy for Releases**
+
+- **main:** Stable, production-ready code
+- **develop:** Integration branch for features
+- **feature/*:** Individual feature branches
+- **release/*:** Preparation branches for releases
+
+```bash
+# Example release workflow
+git checkout -b release/v1.1.0
+# Make final adjustments
+pnpm changeset version
+pnpm build:packages
+git commit -m "chore: prepare release v1.1.0"
+git checkout main
+git merge release/v1.1.0
+git push origin main
+```
+
+### **Phase 3: Publishing Process**
+
+#### **Step 1: Manual Publishing Setup**
+
+**Prerequisites:**
+1. GitHub Personal Access Token with `packages:write` permission
+2. Token stored as `GITHUB_TOKEN` environment variable
+
+**Publishing Command Sequence:**
+
+```bash
+# 1. Ensure you're on main branch with latest changes
+git checkout main
+git pull origin main
+
+# 2. Build all packages
+pnpm publish:prepare
+
+# 3. Authenticate with GitHub (if not already done)
+echo "//npm.pkg.github.com/:_authToken=$GITHUB_TOKEN" >> ~/.npmrc
+
+# 4. Publish all packages
+pnpm changeset publish
+
+# 5. Push tags to GitHub
+git push --follow-tags
+```
+
+#### **Step 2: Automated Publishing with GitHub Actions**
+
+Create `.github/workflows/publish.yml`:
+
+```yaml
+name: Publish Packages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  publish:
+    name: Publish to GitHub Package Registry
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build:packages
+
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: pnpm changeset publish
+          title: "chore: release packages"
+          commit: "chore: release packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+#### **Step 3: Pre-publish Validation**
+
+Create a pre-publish script to validate packages:
+
+**Create `scripts/validate-packages.js`:**
+
+```javascript
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
+
+const packagesDir = path.join(__dirname, '../packages');
+const packages = fs.readdirSync(packagesDir);
+
+let hasErrors = false;
+
+packages.forEach(packageName => {
+  const packagePath = path.join(packagesDir, packageName);
+  const packageJsonPath = path.join(packagePath, 'package.json');
+  const distPath = path.join(packagePath, 'dist');
+  
+  if (!fs.existsSync(packageJsonPath)) {
+    console.error(`❌ Missing package.json in ${packageName}`);
+    hasErrors = true;
+    return;
+  }
+  
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+  
+  // Check required fields
+  const requiredFields = ['name', 'version', 'main', 'types'];
+  requiredFields.forEach(field => {
+    if (!packageJson[field]) {
+      console.error(`❌ Missing ${field} in ${packageName}/package.json`);
+      hasErrors = true;
+    }
+  });
+  
+  // Check if dist folder exists
+  if (!fs.existsSync(distPath)) {
+    console.error(`❌ Missing dist folder in ${packageName}`);
+    hasErrors = true;
+  }
+  
+  console.log(`✅ ${packageName} is valid`);
+});
+
+if (hasErrors) {
+  console.error('\n❌ Validation failed. Please fix the errors above.');
+  process.exit(1);
+} else {
+  console.log('\n✅ All packages are valid and ready for publishing!');
+}
+```
+
+**Add to root `package.json`:**
+
+```json
+{
+  "scripts": {
+    "validate:packages": "node scripts/validate-packages.js",
+    "publish:prepare": "pnpm validate:packages && pnpm build:packages"
+  }
+}
+```
+
+### **Phase 4: Installation and Usage Instructions**
+
+#### **For New Projects Using Your Component Library**
+
+**Step 1: Authentication Setup**
+
+Users of your library need to authenticate with GitHub Package Registry:
+
+```bash
+# Create or update ~/.npmrc
+echo "@poc:registry=https://npm.pkg.github.com" >> ~/.npmrc
+echo "//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN" >> ~/.npmrc
+```
+
+**Alternative: Project-level authentication**
+
+Create `.npmrc` in the consuming project:
+
+```bash
+# .npmrc in the consuming project
+@poc:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
+```
+
+**Step 2: Installation Commands**
+
+#### **Option A: Install Complete Library (Recommended)**
+
+Install all packages for full functionality:
+
+```bash
+# Install complete component library (when unified package exists)
+npm install @poc/components @poc/themes
+
+# Or with pnpm
+pnpm add @poc/components @poc/themes
+
+# Or with yarn
+yarn add @poc/components @poc/themes
+
+# Current Reality: Install individual components
+npm install @poc/button @poc/themes
+```
+
+#### **Option B: Install Individual Packages**
+
+Install only what you need for more granular control:
+
+```bash
+# Install individual components (current structure)
+npm install @poc/button
+
+# Install only themes (for custom implementations)
+npm install @poc/themes
+
+# Install specific configuration packages
+npm install @poc/tsconfig @poc/eslint-config
+
+# Mix and match based on your needs
+npm install @poc/button @poc/themes @poc/tsconfig
+```
+
+#### **Package Dependencies and Compatibility**
+
+| Package | Dependencies | Use Case |
+|---------|-------------|----------|
+| `@poc/button` | None (peer deps: React, React-DOM) | Button component with theme integration |
+| `@poc/themes` | React (peer dependency) | Theme definitions and ThemeProvider |
+| `@poc/tsconfig` | None | TypeScript configuration |
+| `@poc/eslint-config` | ESLint plugins | Linting configuration |
+
+**Important Notes:**
+- **Components package** works standalone but requires a theme context for full functionality
+- **Themes package** can be used independently for custom component implementations
+- **Configuration packages** are optional development dependencies
+
+**Step 3: Basic Setup in a React Project**
+
+**Create a basic setup file `src/lib/components.ts`:**
+
+```typescript
+// src/lib/components.ts
+import { ThemeProvider } from '@poc/themes';
+import { atixTheme } from '@poc/themes';
+
+// Re-export components for easier imports
+export * from '@poc/button';
+export { ThemeProvider, atixTheme };
+```
+
+**Update your main App component:**
+
+```tsx
+// src/App.tsx
+import React from 'react';
+import { ThemeProvider, atixTheme, Button } from './lib/components';
+
+function App() {
+  return (
+    <ThemeProvider theme={atixTheme}>
+      <div className="App">
+        <h1>My App with Component Library</h1>
+        <Button variant="primary">
+          Hello from Component Library!
+        </Button>
+      </div>
+    </ThemeProvider>
+  );
+}
+
+export default App;
+```
+
+#### **Advanced Installation Scenarios**
+
+**For TypeScript Projects:**
+
+Ensure TypeScript can resolve types by adding to `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
+  }
+}
+```
+
+**For Next.js Projects:**
+
+Add to `next.config.js`:
+
+```javascript
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  transpilePackages: [
+    '@poc/components',
+    '@poc/themes'
+  ],
+  experimental: {
+    externalDir: true
+  }
+};
+
+module.exports = nextConfig;
+```
+
+**For Vite Projects:**
+
+No additional configuration needed, but ensure you have the latest Vite version:
+
+```bash
+npm update vite @vitejs/plugin-react
+```
+
+#### **Usage Examples and Patterns**
+
+**1. Complete Library Usage (Components + Themes):**
+
+```tsx
+import { Button } from '@poc/button';
+import { ThemeProvider, atixTheme } from '@poc/themes';
+
+function MyApp() {
+  return (
+    <ThemeProvider theme={atixTheme}>
+      <div>
+        <Button variant="primary">Submit</Button>
+      </div>
+    </ThemeProvider>
+  );
+}
+```
+
+**2. Components Only (Custom Theme Implementation):**
+
+If you only install `@poc/button` and want to implement your own theming:
+
+```tsx
+import { Button } from '@poc/button';
+import { createTheme, ThemeProvider } from '@mui/material/styles'; // Example with MUI
+
+const customTheme = createTheme({
+  // Your custom theme configuration
+});
+
+function MyApp() {
+  return (
+    <ThemeProvider theme={customTheme}>
+      <div>
+        <Button variant="primary">Submit</Button>
+      </div>
+    </ThemeProvider>
+  );
+}
+```
+
+**3. Themes Only (Custom Components):**
+
+If you only install `@poc/themes` to use with your own components:
+
+```tsx
+import { ThemeProvider, atixTheme, useTheme } from '@poc/themes';
+
+// Your custom component using the theme
+function CustomButton({ children, ...props }) {
+  const theme = useTheme();
+  
+  return (
+    <button 
+      style={{ 
+        backgroundColor: theme.colors.primary[3],
+        color: theme.colors.primary[0]
+      }}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider theme={atixTheme}>
+      <CustomButton>My Custom Button</CustomButton>
+    </ThemeProvider>
+  );
+}
+```
+
+**4. Dynamic Theme Switching:**
+
+```tsx
+import { useState } from 'react';
+import { ThemeProvider, atixTheme, bancoWTheme } from '@poc/themes';
+import { Button } from '@poc/button';
+
+function App() {
+  const [currentTheme, setCurrentTheme] = useState(atixTheme);
+
+  const toggleTheme = () => {
+    setCurrentTheme(prev => prev === atixTheme ? bancoWTheme : atixTheme);
+  };
+
+  return (
+    <ThemeProvider theme={currentTheme}>
+      <Button onClick={toggleTheme}>
+        Switch Theme
+      </Button>
+      {/* Your app components */}
+    </ThemeProvider>
+  );
+}
+```
+
+#### **Installation Strategy Decision Guide**
+
+Choose your installation approach based on your project needs:
+
+| Scenario | Recommended Installation | Reason |
+|----------|-------------------------|---------|
+| **New project starting from scratch** | Complete library (`@poc/button @poc/themes`) | Full functionality, consistent theming |
+| **Existing project with established design system** | Components only (`@poc/button`) | Integrate with existing theme system |
+| **Building custom components with library themes** | Themes only (`@poc/themes`) | Reuse theme system, custom component implementation |
+| **Large project with selective usage** | Individual packages as needed | Minimize bundle size, use only required features |
+| **Development/build tooling** | Config packages (`@poc/tsconfig @poc/eslint-config`) | Consistent development experience |
+
+#### **Migration Paths Between Installation Options**
+
+**From Components-Only to Complete Library:**
+
+```bash
+# Add themes package
+npm install @poc/themes
+
+# Update your imports
+- import { createTheme } from './utils/theme';
++ import { ThemeProvider, atixTheme } from '@poc/themes';
+```
+
+**From Complete Library to Components-Only:**
+
+```bash
+# Remove themes package
+npm uninstall @poc/themes
+
+# Implement custom theming
++ import { createTheme } from './utils/theme';
+- import { ThemeProvider, atixTheme } from '@poc/themes';
+```
+
+### **Phase 5: Maintenance and Updates**
+
+#### **Updating the Library**
+
+**For Library Maintainers:**
+
+```bash
+# 1. Make your changes
+git checkout -b feature/new-component
+
+# 2. Create changeset when ready
+pnpm changeset
+
+# 3. Commit and push
+git commit -m "feat: add new component"
+git push origin feature/new-component
+
+# 4. Create PR and merge to main
+# 5. Automated publishing will handle the rest
+```
+
+**For Library Consumers:**
+
+```bash
+# Check for updates
+npm outdated @poc/button @poc/themes
+
+# Update to latest versions
+npm update @poc/button @poc/themes
+
+# Or update to specific version
+npm install @poc/button@1.2.0
+```
+
+#### **Breaking Changes Management**
+
+**Communicating Breaking Changes:**
+
+1. **Changelog:** Maintain detailed CHANGELOG.md files
+2. **Migration Guides:** Create migration documentation for major versions
+3. **Deprecation Warnings:** Add deprecation warnings before removing features
+4. **Version Support:** Maintain support for previous major version
+
+**Example Migration Guide Structure:**
+
+```markdown
+# Migration Guide: v2.0.0
+
+## Breaking Changes
+
+### Button Component
+- `size` prop renamed to `variant`
+- `color` prop removed, use `intent` instead
+
+### Before (v1.x)
+```tsx
+<Button size="large" color="blue">Click me</Button>
+```
+
+### After (v2.x)
+```tsx
+<Button variant="large" intent="primary">Click me</Button>
+```
+
+## Automated Migration
+Run our codemod to automatically update your code:
+```bash
+npx @poc/codemod v1-to-v2 src/
+```
+```
+
+### **Publishing Checklist**
+
+Before each release, ensure:
+
+- [ ] All tests pass
+- [ ] Documentation is updated
+- [ ] Changesets are created for all changes
+- [ ] Build artifacts are generated successfully
+- [ ] Version numbers follow semver
+- [ ] Breaking changes are documented
+- [ ] CI/CD pipeline completes successfully
+- [ ] GitHub release notes are prepared
+
+### **Troubleshooting Publishing Issues**
+
+**Common Issues and Solutions:**
+
+1. **Authentication Failures:**
+   ```bash
+   # Verify token has correct permissions
+   npm whoami --registry=https://npm.pkg.github.com
+   ```
+
+2. **Package Not Found:**
+   ```bash
+   # Check if package is public
+   # Verify package name and scope
+   # Ensure user has access to the repository
+   ```
+
+3. **Version Conflicts:**
+   ```bash
+   # Check existing versions
+   npm view @poc/button versions --json
+   ```
+
+4. **Build Failures:**
+   ```bash
+   # Clean and rebuild
+   pnpm clean
+   pnpm install
+   pnpm build:packages
+   ```
+
+This comprehensive publishing strategy ensures reliable, automated distribution of your component library while maintaining version control and providing clear installation instructions for consumers.
