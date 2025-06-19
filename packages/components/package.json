@@ -1,6 +1,6 @@
 {
   "name": "@poc/components",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Complete POC component library",
   "type": "module",
   "main": "./dist/index.js",
@@ -56,4 +56,4 @@
   "peerDependencies": {
     "react": "^19.1.0"
   }
-} 
+}
