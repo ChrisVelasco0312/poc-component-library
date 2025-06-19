@@ -1,5 +1,16 @@
 # @ChrisVelasco0312/poc-ui-components
 
+## 0.3.0
+
+### Minor Changes
+
+- fix style exports
+
+### Patch Changes
+
+- Updated dependencies
+  - @ChrisVelasco0312/poc-ui-button@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@ChrisVelasco0312/poc-ui-components",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Complete POC component library",
   "type": "module",
   "main": "./dist/index.js",
@@ -16,7 +16,8 @@
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
       }
-    }
+    },
+    "./dist/poc-ui-components.css": "./dist/poc-ui-components.css"
   },
   "files": [
     "dist",
@@ -56,5 +57,9 @@
   },
   "peerDependencies": {
     "react": "^19.1.0"
-  }
+  },
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ]
 }

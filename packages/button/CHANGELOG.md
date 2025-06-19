@@ -1,5 +1,11 @@
 # @ChrisVelasco0312/poc-ui-button
 
+## 0.3.0
+
+### Minor Changes
+
+- fix style exports
+
 ## 0.2.0
 
 ### Minor Changes
