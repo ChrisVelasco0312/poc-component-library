@@ -1,6 +1,6 @@
 {
   "name": "@ChrisVelasco0312/poc-ui-themes",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Theme system for the component library",
   "type": "module",
   "main": "./dist/index.js",

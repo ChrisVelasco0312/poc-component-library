@@ -1,6 +1,6 @@
 {
   "name": "@ChrisVelasco0312/poc-ui-button",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A simple button component",
   "type": "module",
   "main": "./dist/button.umd.js",

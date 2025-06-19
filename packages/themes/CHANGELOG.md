@@ -1,5 +1,11 @@
 # @ChrisVelasco0312/poc-ui-themes
 
+## 0.2.0
+
+### Minor Changes
+
+- test fix styles
+
 ## 0.1.0
 
 ### Minor Changes
