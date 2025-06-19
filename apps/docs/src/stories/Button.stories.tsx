@@ -1,20 +1,23 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button } from '@poc/button';
-import { ThemeProvider, oceanTheme, forestTheme } from '@poc/themes';
-import React from 'react';
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Button } from "@ChrisVelasco0312/poc-ui-button";
+import {
+  ThemeProvider,
+  oceanTheme,
+  forestTheme,
+} from "@ChrisVelasco0312/poc-ui-themes";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
-  title: 'Components/Button',
+  title: "Components/Button",
   component: Button,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
-    variant: { control: 'radio', options: ['primary', 'secondary'] },
+    variant: { control: "radio", options: ["primary", "secondary"] },
   },
 } satisfies Meta<typeof Button>;
 
@@ -24,8 +27,8 @@ type Story = StoryObj<typeof meta>;
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Primary: Story = {
   args: {
-    variant: 'primary',
-    children: 'Primary Button',
+    variant: "primary",
+    children: "Primary Button",
   },
   decorators: [
     (Story) => (
@@ -38,8 +41,8 @@ export const Primary: Story = {
 
 export const Secondary: Story = {
   args: {
-    variant: 'secondary',
-    children: 'Secondary Button',
+    variant: "secondary",
+    children: "Secondary Button",
   },
   decorators: [
     (Story) => (
@@ -52,9 +55,9 @@ export const Secondary: Story = {
 
 export const WithClickHandler: Story = {
   args: {
-    variant: 'primary',
-    children: 'Click me!',
-    onClick: () => alert('Button clicked!'),
+    variant: "primary",
+    children: "Click me!",
+    onClick: () => alert("Button clicked!"),
   },
   decorators: [
     (Story) => (
@@ -67,8 +70,8 @@ export const WithClickHandler: Story = {
 
 export const Disabled: Story = {
   args: {
-    variant: 'primary',
-    children: 'Disabled Button',
+    variant: "primary",
+    children: "Disabled Button",
     disabled: true,
   },
   decorators: [
@@ -82,13 +85,20 @@ export const Disabled: Story = {
 
 export const WithForestTheme: Story = {
   args: {
-    variant: 'primary',
-    children: 'Forest Theme Button',
+    variant: "primary",
+    children: "Forest Theme Button",
   },
   decorators: [
     (Story) => (
       <ThemeProvider theme={forestTheme}>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', padding: '1rem' }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "1rem",
+            alignItems: "center",
+            padding: "1rem",
+          }}
+        >
           <Story />
           <Button variant="secondary">Forest Secondary</Button>
         </div>
@@ -99,12 +109,19 @@ export const WithForestTheme: Story = {
 
 export const WithoutTheme: Story = {
   args: {
-    variant: 'primary',
-    children: 'No Theme (Uses Fallbacks)',
+    variant: "primary",
+    children: "No Theme (Uses Fallbacks)",
   },
   decorators: [
     (Story) => (
-      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', padding: '1rem' }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "1rem",
+          alignItems: "center",
+          padding: "1rem",
+        }}
+      >
         <Story />
         <Button variant="secondary">Secondary Fallback</Button>
       </div>
@@ -114,17 +131,24 @@ export const WithoutTheme: Story = {
 
 export const WithDefaultTheme: Story = {
   args: {
-    variant: 'primary',
-    children: 'Default Theme',
+    variant: "primary",
+    children: "Default Theme",
   },
   decorators: [
     (Story) => (
       <ThemeProvider>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', padding: '1rem' }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "1rem",
+            alignItems: "center",
+            padding: "1rem",
+          }}
+        >
           <Story />
           <Button variant="secondary">Default Secondary</Button>
         </div>
       </ThemeProvider>
     ),
   ],
-}; 
+};

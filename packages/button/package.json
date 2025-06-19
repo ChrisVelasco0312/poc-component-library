@@ -1,5 +1,5 @@
 {
-  "name": "@poc/button",
+  "name": "@ChrisVelasco0312/poc-ui-button",
   "version": "0.1.0",
   "description": "A simple button component",
   "type": "module",
@@ -38,8 +38,8 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "devDependencies": {
-    "@poc/eslint-config": "workspace:*",
-    "@poc/tsconfig": "workspace:*",
+    "@ChrisVelasco0312/poc-eslint-config": "workspace:*",
+    "@ChrisVelasco0312/poc-tsconfig": "workspace:*",
     "@types/node": "^24.0.1",
     "@types/react": "^19.1.8",
     "@vitejs/plugin-react": "^4.5.2",

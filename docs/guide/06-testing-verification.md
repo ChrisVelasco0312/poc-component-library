@@ -65,8 +65,8 @@ Ensure all packages build correctly:
 
 ```bash
 # Clean previous builds
-pnpm --filter @poc/button exec rm -rf dist
-pnpm --filter @poc/themes exec rm -rf dist
+pnpm --filter @ChrisVelasco0312/poc-ui-button exec rm -rf dist
+pnpm --filter @ChrisVelasco0312/poc-ui-themes exec rm -rf dist
 
 # Rebuild everything
 pnpm build
@@ -101,7 +101,7 @@ Create a test TypeScript file to verify type exports:
 ```bash
 # Create a temporary test file
 cat > /tmp/type-test.ts << 'EOF'
-import { Button, ButtonProps } from '@poc/button';
+import { Button, ButtonProps } from '@ChrisVelasco0312/poc-ui-button';
 
 // This should type-check correctly
 const props: ButtonProps = {
@@ -145,7 +145,7 @@ Create a simple test file:
 // test-integration.tsx
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { Button } from '@poc/button';
+import { Button } from '@ChrisVelasco0312/poc-ui-button';
 
 function TestApp() {
   return (
@@ -178,7 +178,7 @@ Test on different environments:
 node -e "
 const React = require('react');
 const { renderToString } = require('react-dom/server');
-const { Button } = require('@poc/button');
+const { Button } = require('@ChrisVelasco0312/poc-ui-button');
 console.log(renderToString(React.createElement(Button, {}, 'SSR Test')));
 "
 ```
@@ -186,10 +186,10 @@ console.log(renderToString(React.createElement(Button, {}, 'SSR Test')));
 **Different Package Managers:**
 ```bash
 # Test with npm
-npm install @poc/button
+npm install @ChrisVelasco0312/poc-ui-button
 
 # Test with yarn
-yarn add @poc/button
+yarn add @ChrisVelasco0312/poc-ui-button
 ```
 
 ## Performance Testing
@@ -213,7 +213,7 @@ Ensure your packages support tree shaking:
 
 ```bash
 # Create a test import
-echo "import { Button } from '@poc/button';" > /tmp/tree-shake-test.js
+echo "import { Button } from '@ChrisVelasco0312/poc-ui-button';" > /tmp/tree-shake-test.js
 
 # Bundle with a tool that supports tree shaking
 npx esbuild /tmp/tree-shake-test.js --bundle --minify --outfile=/tmp/output.js
@@ -300,7 +300,7 @@ jobs:
 
 ### Import/Export Issues
 
-**Problem**: `Cannot resolve module '@poc/button'`
+**Problem**: `Cannot resolve module '@ChrisVelasco0312/poc-ui-button'`
 
 **Solutions**:
 1. Check package.json exports field

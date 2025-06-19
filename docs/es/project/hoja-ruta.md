@@ -49,7 +49,7 @@ pnpm add -D -w turborepo
 
 ### 1.4 Configuraciones Compartidas
 - [ ] Crear estructura de directorio `packages/config/tsconfig/`
-- [ ] Configurar paquete `@poc/tsconfig` con `react-library.json`
+- [ ] Configurar paquete `@ChrisVelasco0312/poc-tsconfig` con `react-library.json`
 - [ ] Crear `tsconfig.json` raíz para soporte de VS Code
 
 **Estructura Esperada Después de la Fase 1:**
@@ -79,23 +79,23 @@ pnpm init
 
 ### 2.2 Configuración del Paquete
 - [ ] Configurar `package.json` con:
-  - Nombre: `@poc/button`
+  - Nombre: `@ChrisVelasco0312/poc-ui-button`
   - Exportaciones y puntos de entrada apropiados
   - Scripts de build y dependencias
 - [ ] Instalar dependencias:
 ```bash
 pnpm add react --save-peer
-pnpm add -D typescript vite @vitejs/plugin-react vite-plugin-dts @poc/tsconfig
+pnpm add -D typescript vite @vitejs/plugin-react vite-plugin-dts @ChrisVelasco0312/poc-tsconfig
 ```
 
 ### 2.3 Configuración de Build
-- [ ] Crear `tsconfig.json` extendiendo `@poc/tsconfig`
+- [ ] Crear `tsconfig.json` extendiendo `@ChrisVelasco0312/poc-tsconfig`
 - [ ] Crear `vite.config.ts` para empaquetado de librería
 
 ### 2.4 Desarrollo del Componente
 - [ ] Crear `src/Button.tsx` con interfaz TypeScript
 - [ ] Crear `src/index.ts` como punto de entrada
-- [ ] Probar build: `pnpm turbo build --filter=@poc/button`
+- [ ] Probar build: `pnpm turbo build --filter=@ChrisVelasco0312/poc-ui-button`
 
 **Estructura Esperada Después de la Fase 2:**
 ```
@@ -139,7 +139,7 @@ npx storybook@latest init
 ### 4.1 Configuración de Registro
 - [ ] Crear `.npmrc` raíz:
 ```
-@poc:registry=https://npm.pkg.github.com/
+@ChrisVelasco0312:registry=https://npm.pkg.github.com/
 ```
 
 ### 4.2 Configuración de Publicación del Paquete
@@ -167,7 +167,7 @@ git commit -m "feat: configuración inicial del proyecto y componente button"
 ### 5.2 Proceso de Publicación
 - [ ] Actualizar versión del paquete button a `0.0.1`
 - [ ] Establecer variable de entorno: `export NPM_TOKEN=ghp_xxxxx`
-- [ ] Publicar: `pnpm publish --filter @poc/button`
+- [ ] Publicar: `pnpm publish --filter @ChrisVelasco0312/poc-ui-button`
 - [ ] Verificar que el paquete aparece en GitHub Packages
 
 ---
@@ -184,10 +184,10 @@ cd test-consumer-app
 
 ### 6.2 Instalación de Paquete Privado
 - [ ] Crear `.npmrc` con token de auth
-- [ ] Instalar paquete: `pnpm add @poc/button`
+- [ ] Instalar paquete: `pnpm add @ChrisVelasco0312/poc-ui-button`
 
 ### 6.3 Prueba de Integración
-- [ ] Importar y usar `@poc/button` en página Next.js
+- [ ] Importar y usar `@ChrisVelasco0312/poc-ui-button` en página Next.js
 - [ ] Probar funcionalidad: `pnpm dev`
 - [ ] Verificar que los botones funcionan en `http://localhost:3000`
 

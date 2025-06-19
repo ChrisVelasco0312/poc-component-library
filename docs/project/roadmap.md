@@ -49,7 +49,7 @@ pnpm add -D -w turborepo
 
 ### 1.4 Shared Configurations
 - [ ] Create `packages/config/tsconfig/` directory structure
-- [ ] Setup `@poc/tsconfig` package with `react-library.json`
+- [ ] Setup `@ChrisVelasco0312/poc-tsconfig` package with `react-library.json`
 - [ ] Create root `tsconfig.json` for VS Code support
 
 **Expected Structure After Phase 1:**
@@ -79,23 +79,23 @@ pnpm init
 
 ### 2.2 Package Configuration
 - [ ] Configure `package.json` with:
-  - Name: `@poc/button`
+  - Name: `@ChrisVelasco0312/poc-ui-button`
   - Proper exports and entry points
   - Build scripts and dependencies
 - [ ] Install dependencies:
 ```bash
 pnpm add react --save-peer
-pnpm add -D typescript vite @vitejs/plugin-react vite-plugin-dts @poc/tsconfig
+pnpm add -D typescript vite @vitejs/plugin-react vite-plugin-dts @ChrisVelasco0312/poc-tsconfig
 ```
 
 ### 2.3 Build Configuration
-- [ ] Create `tsconfig.json` extending `@poc/tsconfig`
+- [ ] Create `tsconfig.json` extending `@ChrisVelasco0312/poc-tsconfig`
 - [ ] Create `vite.config.ts` for library bundling
 
 ### 2.4 Component Development
 - [ ] Create `src/Button.tsx` with TypeScript interface
 - [ ] Create `src/index.ts` as entry point
-- [ ] Test build: `pnpm turbo build --filter=@poc/button`
+- [ ] Test build: `pnpm turbo build --filter=@ChrisVelasco0312/poc-ui-button`
 
 **Expected Structure After Phase 2:**
 ```
@@ -139,7 +139,7 @@ npx storybook@latest init
 ### 4.1 Registry Configuration
 - [ ] Create root `.npmrc`:
 ```
-@poc:registry=https://npm.pkg.github.com/
+@ChrisVelasco0312:registry=https://npm.pkg.github.com/
 ```
 
 ### 4.2 Package Publishing Config
@@ -167,7 +167,7 @@ git commit -m "feat: initial project setup and button component"
 ### 5.2 Publishing Process
 - [ ] Update button package version to `0.0.1`
 - [ ] Set environment variable: `export NPM_TOKEN=ghp_xxxxx`
-- [ ] Publish: `pnpm publish --filter @poc/button`
+- [ ] Publish: `pnpm publish --filter @ChrisVelasco0312/poc-ui-button`
 - [ ] Verify package appears in GitHub Packages
 
 ---
@@ -184,10 +184,10 @@ cd test-consumer-app
 
 ### 6.2 Private Package Installation
 - [ ] Create `.npmrc` with auth token
-- [ ] Install package: `pnpm add @poc/button`
+- [ ] Install package: `pnpm add @ChrisVelasco0312/poc-ui-button`
 
 ### 6.3 Integration Test
-- [ ] Import and use `@poc/button` in Next.js page
+- [ ] Import and use `@ChrisVelasco0312/poc-ui-button` in Next.js page
 - [ ] Test functionality: `pnpm dev`
 - [ ] Verify buttons work at `http://localhost:3000`
 

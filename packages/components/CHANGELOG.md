@@ -1,4 +1,15 @@
-# @poc/components
+# @ChrisVelasco0312/poc-ui-components
+
+## 0.1.0
+
+### Minor Changes
+
+- initial publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @ChrisVelasco0312/poc-ui-button@0.1.0
 
 ## 0.1.0
 
@@ -9,4 +20,4 @@
 ### Patch Changes
 
 - Updated dependencies
-  - @poc/button@0.1.0
+  - @ChrisVelasco0312/poc-ui-button@0.1.0

@@ -1,18 +1,18 @@
-# @poc/components
+# @ChrisVelasco0312/poc-ui-components
 
 Complete component library for POC project.
 
 ## Installation
 
 ```bash
-npm install @poc/components @poc/themes
+npm install @ChrisVelasco0312/poc-ui-components @ChrisVelasco0312/poc-ui-themes
 ```
 
 ## Usage
 
 ```tsx
-import { Button } from '@poc/components';
-import { ThemeProvider, atixTheme } from '@poc/themes';
+import { Button } from '@ChrisVelasco0312/poc-ui-components';
+import { ThemeProvider, atixTheme } from '@ChrisVelasco0312/poc-ui-themes';
 
 function App() {
   return (
@@ -30,7 +30,7 @@ function App() {
 ## Requirements
 
 - React 19.1.0 or later
-- @poc/themes for full theming functionality
+- @ChrisVelasco0312/poc-ui-themes for full theming functionality
 
 ## Development
 

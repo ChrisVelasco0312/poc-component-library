@@ -9,10 +9,10 @@ poc-component-library/
 │       └── src/stories/      # All component stories and docs
 ├── packages/
 │   ├── components/
-│   │   └── button/           # @poc/button component (pure)
+│   │   └── button/           # @ChrisVelasco0312/poc-ui-button component (pure)
 │   └── config/
-│       ├── eslint/           # @poc/eslint-config
-│       └── tsconfig/         # @poc/tsconfig
+│       ├── eslint/           # @ChrisVelasco0312/poc-eslint-config
+│       └── tsconfig/         # @ChrisVelasco0312/poc-tsconfig
 ├── package.json              # Root package with scripts
 ├── pnpm-workspace.yaml       # pnpm workspaces config
 └── turbo.json               # Turborepo task pipeline

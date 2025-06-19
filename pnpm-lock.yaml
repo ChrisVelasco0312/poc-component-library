@@ -38,10 +38,10 @@ importers:
 
   apps/docs:
     dependencies:
-      '@poc/button':
+      '@ChrisVelasco0312/poc-ui-button':
         specifier: workspace:*
         version: link:../../packages/button
-      '@poc/themes':
+      '@ChrisVelasco0312/poc-ui-themes':
         specifier: workspace:*
         version: link:../../packages/themes
       react:
@@ -72,6 +72,12 @@ importers:
       '@types/react-dom':
         specifier: ^19.1.0
         version: 19.1.6(@types/react@19.1.8)
+      eslint-plugin-react-refresh:
+        specifier: ^0.4.20
+        version: 0.4.20(eslint@9.29.0)
+      eslint-plugin-storybook:
+        specifier: ^9.0.12
+        version: 9.0.12(eslint@9.29.0)(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@2.8.8))(typescript@5.8.3)
       globals:
         specifier: ^15.9.0
         version: 15.15.0
@@ -84,16 +90,19 @@ importers:
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
+      typescript-eslint:
+        specifier: ^8.34.1
+        version: 8.34.1(eslint@9.29.0)(typescript@5.8.3)
       vite:
         specifier: ^6.3.5
         version: 6.3.5(@types/node@24.0.3)(sass@1.89.2)
 
   packages/button:
     devDependencies:
-      '@poc/eslint-config':
+      '@ChrisVelasco0312/poc-eslint-config':
         specifier: workspace:*
         version: link:../config/eslint
-      '@poc/tsconfig':
+      '@ChrisVelasco0312/poc-tsconfig':
         specifier: workspace:*
         version: link:../config/tsconfig
       '@types/node':
@@ -123,17 +132,17 @@ importers:
 
   packages/components:
     dependencies:
-      '@poc/button':
+      '@ChrisVelasco0312/poc-ui-button':
         specifier: workspace:*
         version: link:../button
       react:
         specifier: ^19.1.0
         version: 19.1.0
     devDependencies:
-      '@poc/eslint-config':
+      '@ChrisVelasco0312/poc-eslint-config':
         specifier: workspace:*
         version: link:../config/eslint
-      '@poc/tsconfig':
+      '@ChrisVelasco0312/poc-tsconfig':
         specifier: workspace:*
         version: link:../config/tsconfig
       '@vitejs/plugin-react':
@@ -163,10 +172,10 @@ importers:
         specifier: ^19.1.0
         version: 19.1.0
     devDependencies:
-      '@poc/eslint-config':
+      '@ChrisVelasco0312/poc-eslint-config':
         specifier: workspace:*
         version: link:../config/eslint
-      '@poc/tsconfig':
+      '@ChrisVelasco0312/poc-tsconfig':
         specifier: workspace:*
         version: link:../config/tsconfig
       '@types/react':
@@ -1468,11 +1477,23 @@ packages:
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
 
+  eslint-plugin-react-refresh@0.4.20:
+    resolution: {integrity: sha512-XpbHQ2q5gUF8BGOX4dHe+71qoirYMhApEPZ7sfhF/dNnOF1UXnCMGZf79SFTBO7Bz5YEIT4TMieSlJBWhP9WBA==}
+    peerDependencies:
+      eslint: '>=8.40'
+
   eslint-plugin-react@7.37.5:
     resolution: {integrity: sha512-Qteup0SqU15kdocexFNAJMvCJEfa2xUKNV4CC1xsVMrIIqEy3SQ/rqyxCWNzfrd3/ldy6HMlD2e0JDVpDg2qIA==}
     engines: {node: '>=4'}
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
+
+  eslint-plugin-storybook@9.0.12:
+    resolution: {integrity: sha512-dSzcozoI7tQRqfMODWfxahrRmKWsK88yKSUcO0+s361oYcX7nf8nEu99TQ/wuDLRHh+Zi7E2j43cPMH8gFo8OA==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      eslint: '>=8'
+      storybook: ^9.0.12
 
   eslint-scope@8.4.0:
     resolution: {integrity: sha512-sNXOfKCn74rt8RICKMvJS7XKV/Xk9kA7DyJr8mJik3S7Cwgy3qlkkmyS2uQB3jiJg6VNdZd/pDBJu0nvG2NlTg==}
@@ -2608,6 +2629,13 @@ packages:
   typed-array-length@1.0.7:
     resolution: {integrity: sha512-3KS2b+kL7fsuk/eJZ7EQdnEmQoaho/r6KUef7hxvltNA5DR8NAUM+8wJMbJyZ4G9/7i3v5zPBIMN5aybAh2/Jg==}
     engines: {node: '>= 0.4'}
+
+  typescript-eslint@8.34.1:
+    resolution: {integrity: sha512-XjS+b6Vg9oT1BaIUfkW3M3LvqZE++rbzAMEHuccCfO/YkP43ha6w3jTEMilQxMF92nVOYCcdjv1ZUhAa1D/0ow==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      eslint: ^8.57.0 || ^9.0.0
+      typescript: '>=4.8.4 <5.9.0'
 
   typescript@5.8.2:
     resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}
@@ -4266,6 +4294,10 @@ snapshots:
     dependencies:
       eslint: 9.29.0
 
+  eslint-plugin-react-refresh@0.4.20(eslint@9.29.0):
+    dependencies:
+      eslint: 9.29.0
+
   eslint-plugin-react@7.37.5(eslint@9.29.0):
     dependencies:
       array-includes: 3.1.9
@@ -4287,6 +4319,15 @@ snapshots:
       semver: 6.3.1
       string.prototype.matchall: 4.0.12
       string.prototype.repeat: 1.0.0
+
+  eslint-plugin-storybook@9.0.12(eslint@9.29.0)(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@2.8.8))(typescript@5.8.3):
+    dependencies:
+      '@typescript-eslint/utils': 8.34.1(eslint@9.29.0)(typescript@5.8.3)
+      eslint: 9.29.0
+      storybook: 9.0.12(@testing-library/dom@10.4.0)(prettier@2.8.8)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
 
   eslint-scope@8.4.0:
     dependencies:
@@ -5510,6 +5551,16 @@ snapshots:
       is-typed-array: 1.1.15
       possible-typed-array-names: 1.1.0
       reflect.getprototypeof: 1.0.10
+
+  typescript-eslint@8.34.1(eslint@9.29.0)(typescript@5.8.3):
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 8.34.1(@typescript-eslint/parser@8.34.1(eslint@9.29.0)(typescript@5.8.3))(eslint@9.29.0)(typescript@5.8.3)
+      '@typescript-eslint/parser': 8.34.1(eslint@9.29.0)(typescript@5.8.3)
+      '@typescript-eslint/utils': 8.34.1(eslint@9.29.0)(typescript@5.8.3)
+      eslint: 9.29.0
+      typescript: 5.8.3
+    transitivePeerDependencies:
+      - supports-color
 
   typescript@5.8.2: {}
 

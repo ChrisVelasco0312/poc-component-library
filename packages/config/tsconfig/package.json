@@ -1,5 +1,5 @@
 {
-  "name": "@poc/tsconfig",
+  "name": "@ChrisVelasco0312/poc-tsconfig",
   "version": "0.0.0",
   "private": true,
   "files": ["react-library.json"]

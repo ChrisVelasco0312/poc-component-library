@@ -21,7 +21,7 @@ su código fuente.
      return mergeConfig(config, {
        resolve: {
          alias: {
-           '@poc/button': path.resolve(
+           '@ChrisVelasco0312/poc-ui-button': path.resolve(
              __dirname,
              '../../../packages/components/button/src/index.ts'
            ),
@@ -35,5 +35,5 @@ su código fuente.
    `devDependencies` para usar `mergeConfig`.
 3. **Remover importaciones CSS incorrectas:** Asegurar que `apps/docs/.storybook/preview.ts`
    **no** importe ningún archivo CSS de paquetes de componentes (ej.,
-   `@poc/button/dist/button.css`). Los componentes son responsables de importar sus
+   `@ChrisVelasco0312/poc-ui-button/dist/button.css`). Los componentes son responsables de importar sus
    propios estilos directamente en su archivo `index.ts`. 

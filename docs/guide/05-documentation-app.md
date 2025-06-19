@@ -34,8 +34,8 @@ Modify `apps/docs/package.json` to include your component packages:
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@poc/button": "workspace:*",
-    "@poc/themes": "workspace:*",
+    "@ChrisVelasco0312/poc-ui-button": "workspace:*",
+    "@ChrisVelasco0312/poc-ui-themes": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -50,7 +50,7 @@ Modify `apps/docs/package.json` to include your component packages:
 Update `apps/docs/src/App.tsx`:
 
 ```tsx
-import { Button } from "@poc/button";
+import { Button } from "@ChrisVelasco0312/poc-ui-button";
 
 function App() {
   return (
@@ -137,8 +137,8 @@ Or use `pnpm link` for development:
 ```bash
 # In your component library root
 cd ../poc-component-library
-pnpm --filter @poc/button build
-pnpm --filter @poc/themes build
+pnpm --filter @ChrisVelasco0312/poc-ui-button build
+pnpm --filter @ChrisVelasco0312/poc-ui-themes build
 
 # In the test app
 cd ../test-consumer-app
@@ -151,7 +151,7 @@ pnpm link ../poc-component-library/packages/themes
 Update `test-consumer-app/src/app/page.tsx`:
 
 ```tsx
-import { Button } from "@poc/button";
+import { Button } from "@ChrisVelasco0312/poc-ui-button";
 
 export default function Home() {
   return (

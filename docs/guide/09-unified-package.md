@@ -1,10 +1,10 @@
 # Phase 8: Creating the Unified Components Package
 
-This phase creates a unified `@poc/components` package that bundles all individual components and themes, enabling users to install the complete library with a single package.
+This phase creates a unified `@ChrisVelasco0312/poc-ui-components` package that bundles all individual components and themes, enabling users to install the complete library with a single package.
 
 ## Why Create a Unified Package?
 
-- **Simplified Installation**: Users can install `@poc/components @poc/themes` instead of multiple individual packages
+- **Simplified Installation**: Users can install `@ChrisVelasco0312/poc-ui-components @ChrisVelasco0312/poc-ui-themes` instead of multiple individual packages
 - **Better Developer Experience**: Single import source for all components
 - **Easier Version Management**: All components versioned together
 - **Reduced Bundle Configuration**: Fewer dependencies to manage
@@ -39,7 +39,7 @@ Create `packages/components/package.json`:
 
 ```json
 {
-  "name": "@poc/components",
+  "name": "@ChrisVelasco0312/poc-ui-components",
   "version": "0.0.0",
   "description": "Complete POC component library",
   "type": "module",
@@ -83,11 +83,11 @@ Create `packages/components/package.json`:
     "registry": "https://npm.pkg.github.com"
   },
   "dependencies": {
-    "@poc/button": "workspace:*"
+    "@ChrisVelasco0312/poc-ui-button": "workspace:*"
   },
   "devDependencies": {
-    "@poc/tsconfig": "workspace:*",
-    "@poc/eslint-config": "workspace:*",
+    "@ChrisVelasco0312/poc-tsconfig": "workspace:*",
+    "@ChrisVelasco0312/poc-eslint-config": "workspace:*",
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "^5.8.3",
     "vite": "^6.0.1",
@@ -105,7 +105,7 @@ Create `packages/components/tsconfig.json`:
 
 ```json
 {
-  "extends": "@poc/tsconfig/react-library.json",
+  "extends": "@ChrisVelasco0312/poc-tsconfig/react-library.json",
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src"
@@ -127,7 +127,7 @@ Create `packages/components/tsconfig.json`:
 Create `packages/components/eslint.config.js`:
 
 ```javascript
-import config from "@poc/eslint-config/react-library.js";
+import config from "@ChrisVelasco0312/poc-eslint-config/react-library.js";
 
 export default [
   ...config,
@@ -176,7 +176,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@poc/button": resolve(__dirname, "../button/src"),
+      "@ChrisVelasco0312/poc-ui-button": resolve(__dirname, "../button/src"),
       // Future components will be added here:
       // "@poc/input": resolve(__dirname, "../input/src"),
     },
@@ -190,11 +190,11 @@ Create `packages/components/src/index.ts`:
 
 ```typescript
 // Re-export all individual components
-export * from '@poc/button';
+export * from '@ChrisVelasco0312/poc-ui-button';
 
 // You can also create convenience exports
-export { Button } from '@poc/button';
-export type { ButtonProps } from '@poc/button';
+export { Button } from '@ChrisVelasco0312/poc-ui-button';
+export type { ButtonProps } from '@ChrisVelasco0312/poc-ui-button';
 
 // Future components will be added here:
 // export * from '@poc/input';
@@ -207,21 +207,21 @@ export type { ButtonProps } from '@poc/button';
 Create `packages/components/README.md`:
 
 ```markdown
-# @poc/components
+# @ChrisVelasco0312/poc-ui-components
 
 Complete component library for POC project.
 
 ## Installation
 
 ```bash
-npm install @poc/components @poc/themes
+npm install @ChrisVelasco0312/poc-ui-components @ChrisVelasco0312/poc-ui-themes
 ```
 
 ## Usage
 
 ```tsx
-import { Button } from '@poc/components';
-import { ThemeProvider, atixTheme } from '@poc/themes';
+import { Button } from '@ChrisVelasco0312/poc-ui-components';
+import { ThemeProvider, atixTheme } from '@ChrisVelasco0312/poc-ui-themes';
 
 function App() {
   return (
@@ -239,7 +239,7 @@ function App() {
 ## Requirements
 
 - React 19.1.0 or later
-- @poc/themes for full theming functionality
+- @ChrisVelasco0312/poc-ui-themes for full theming functionality
 
 ## Development
 
@@ -295,11 +295,11 @@ cd ../..
 pnpm install
 
 # Build the individual components first
-pnpm --filter @poc/button build
-pnpm --filter @poc/themes build
+pnpm --filter @ChrisVelasco0312/poc-ui-button build
+pnpm --filter @ChrisVelasco0312/poc-ui-themes build
 
 # Build the unified package
-pnpm --filter @poc/components build
+pnpm --filter @ChrisVelasco0312/poc-ui-components build
 
 # Verify everything builds successfully
 pnpm build
@@ -320,8 +320,8 @@ Update `apps/docs/package.json` to use the unified package:
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@poc/components": "workspace:*",
-    "@poc/themes": "workspace:*",
+    "@ChrisVelasco0312/poc-ui-components": "workspace:*",
+    "@ChrisVelasco0312/poc-ui-themes": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -339,11 +339,11 @@ async viteFinal(config) {
   return mergeConfig(config, {
     resolve: {
       alias: {
-        "@poc/components": path.resolve(
+        "@ChrisVelasco0312/poc-ui-components": path.resolve(
           __dirname,
           "../../../packages/components/src/index.ts",
         ),
-        "@poc/themes": path.resolve(
+        "@ChrisVelasco0312/poc-ui-themes": path.resolve(
           __dirname,
           "../../../packages/themes/src/index.ts",
         ),
@@ -358,7 +358,7 @@ Update your stories to use the unified package:
 ```tsx
 // apps/docs/src/stories/Button.stories.tsx
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "@poc/components"; // Changed from @poc/button
+import { Button } from "@ChrisVelasco0312/poc-ui-components"; // Changed from @ChrisVelasco0312/poc-ui-button
 
 const meta: Meta<typeof Button> = {
   title: "Components/Button",
@@ -416,7 +416,7 @@ In `packages/components/package.json`:
 ```json
 {
   "dependencies": {
-    "@poc/button": "workspace:*",
+    "@ChrisVelasco0312/poc-ui-button": "workspace:*",
     "@poc/input": "workspace:*"
   }
 }
@@ -427,13 +427,13 @@ In `packages/components/package.json`:
 In `packages/components/src/index.ts`:
 
 ```typescript
-export * from '@poc/button';
+export * from '@ChrisVelasco0312/poc-ui-button';
 export * from '@poc/input';
 
 // Convenience exports
-export { Button } from '@poc/button';
+export { Button } from '@ChrisVelasco0312/poc-ui-button';
 export { Input } from '@poc/input';
-export type { ButtonProps } from '@poc/button';
+export type { ButtonProps } from '@ChrisVelasco0312/poc-ui-button';
 export type { InputProps } from '@poc/input';
 ```
 
@@ -444,7 +444,7 @@ In `packages/components/vite.config.ts`:
 ```typescript
 resolve: {
   alias: {
-    "@poc/button": resolve(__dirname, "../button/src"),
+    "@ChrisVelasco0312/poc-ui-button": resolve(__dirname, "../button/src"),
     "@poc/input": resolve(__dirname, "../input/src"),
     // Add more components here as you create them
   },
@@ -466,30 +466,30 @@ After implementing the unified package, users have multiple installation options
 ### Option 1: Complete Library (Recommended)
 
 ```bash
-npm install @poc/components @poc/themes
+npm install @ChrisVelasco0312/poc-ui-components @ChrisVelasco0312/poc-ui-themes
 ```
 
 ```tsx
-import { Button } from '@poc/components';
-import { ThemeProvider, atixTheme } from '@poc/themes';
+import { Button } from '@ChrisVelasco0312/poc-ui-components';
+import { ThemeProvider, atixTheme } from '@ChrisVelasco0312/poc-ui-themes';
 ```
 
 ### Option 2: Individual Components
 
 ```bash
-npm install @poc/button @poc/themes
+npm install @ChrisVelasco0312/poc-ui-button @ChrisVelasco0312/poc-ui-themes
 ```
 
 ```tsx
-import { Button } from '@poc/button';
-import { ThemeProvider, atixTheme } from '@poc/themes';
+import { Button } from '@ChrisVelasco0312/poc-ui-button';
+import { ThemeProvider, atixTheme } from '@ChrisVelasco0312/poc-ui-themes';
 ```
 
 ### Option 3: Selective Installation
 
 ```bash
 # Only install what you need
-npm install @poc/button @poc/input @poc/themes
+npm install @ChrisVelasco0312/poc-ui-button @poc/input @ChrisVelasco0312/poc-ui-themes
 ```
 
 This gives users maximum flexibility while providing a convenient default option.

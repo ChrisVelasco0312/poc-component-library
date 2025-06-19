@@ -1,5 +1,5 @@
 {
-  "name": "@poc/themes",
+  "name": "@ChrisVelasco0312/poc-ui-themes",
   "version": "0.1.0",
   "description": "Theme system for the component library",
   "type": "module",
@@ -29,8 +29,8 @@
     "access": "restricted"
   },
   "devDependencies": {
-    "@poc/eslint-config": "workspace:*",
-    "@poc/tsconfig": "workspace:*",
+    "@ChrisVelasco0312/poc-eslint-config": "workspace:*",
+    "@ChrisVelasco0312/poc-tsconfig": "workspace:*",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.0",
     "typescript": "^5.8.3"

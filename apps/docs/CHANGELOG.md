@@ -1,9 +1,9 @@
 # docs
 
-## 0.0.1
+## 1.0.1
 
 ### Patch Changes
 
 - Updated dependencies
-  - @poc/button@0.1.0
-  - @poc/themes@0.1.0
+  - @ChrisVelasco0312/poc-ui-button@0.1.0
+  - @ChrisVelasco0312/poc-ui-themes@0.1.0

@@ -10,11 +10,11 @@ If you are using this component library in your own application and want to appl
 
 ```bash
 # Install both components and themes packages
-npm install @poc/button @poc/themes
+npm install @ChrisVelasco0312/poc-ui-button @ChrisVelasco0312/poc-ui-themes
 # or
-pnpm add @poc/button @poc/themes
+pnpm add @ChrisVelasco0312/poc-ui-button @ChrisVelasco0312/poc-ui-themes
 # or
-yarn add @poc/button @poc/themes
+yarn add @ChrisVelasco0312/poc-ui-button @ChrisVelasco0312/poc-ui-themes
 ```
 
 ## Step 2: Create Your Custom Theme
@@ -26,7 +26,7 @@ In your application codebase (not in the library), define your theme object matc
 Create `src/theme/myTheme.ts`:
 
 ```typescript
-import type { Theme } from "@poc/themes";
+import type { Theme } from "@ChrisVelasco0312/poc-ui-themes";
 
 export const myTheme: Theme = {
   colors: {
@@ -161,7 +161,7 @@ export const myTheme: Theme = {
 For corporate applications, you might create a more specific theme:
 
 ```typescript
-import type { Theme } from "@poc/themes";
+import type { Theme } from "@ChrisVelasco0312/poc-ui-themes";
 
 export const corporateTheme: Theme = {
   colors: {
@@ -252,9 +252,9 @@ In your app's root component (e.g., `App.tsx` or `main.tsx`):
 
 ```tsx
 import React from 'react';
-import { ThemeProvider } from '@poc/themes';
+import { ThemeProvider } from '@ChrisVelasco0312/poc-ui-themes';
 import { myTheme } from './theme/myTheme';
-import { Button } from '@poc/button';
+import { Button } from '@ChrisVelasco0312/poc-ui-button';
 
 function App() {
   return (
@@ -277,7 +277,7 @@ For Next.js apps, wrap your app in `pages/_app.tsx`:
 
 ```tsx
 import type { AppProps } from 'next/app';
-import { ThemeProvider } from '@poc/themes';
+import { ThemeProvider } from '@ChrisVelasco0312/poc-ui-themes';
 import { myTheme } from '../theme/myTheme';
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -292,7 +292,7 @@ export default function App({ Component, pageProps }: AppProps) {
 Or in the new App Router `app/layout.tsx`:
 
 ```tsx
-import { ThemeProvider } from '@poc/themes';
+import { ThemeProvider } from '@ChrisVelasco0312/poc-ui-themes';
 import { myTheme } from '../theme/myTheme';
 
 export default function RootLayout({
@@ -318,9 +318,9 @@ Implement runtime theme switching for user preferences:
 
 ```tsx
 import React, { useState } from 'react';
-import { ThemeProvider, atixTheme, bancoWTheme } from '@poc/themes';
+import { ThemeProvider, atixTheme, bancoWTheme } from '@ChrisVelasco0312/poc-ui-themes';
 import { myTheme } from './theme/myTheme';
-import { Button } from '@poc/button';
+import { Button } from '@ChrisVelasco0312/poc-ui-button';
 
 const themes = {
   atix: atixTheme,
@@ -366,7 +366,7 @@ function App() {
 You can extend existing themes rather than creating from scratch:
 
 ```typescript
-import { atixTheme, type Theme } from '@poc/themes';
+import { atixTheme, type Theme } from '@ChrisVelasco0312/poc-ui-themes';
 
 export const extendedAtixTheme: Theme = {
   ...atixTheme,

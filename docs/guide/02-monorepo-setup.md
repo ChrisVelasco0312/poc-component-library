@@ -139,11 +139,11 @@ cd packages/config/tsconfig
 pnpm init
 ```
 
-In `packages/config/tsconfig/package.json`, set the name to `@poc/tsconfig` and make it private.
+In `packages/config/tsconfig/package.json`, set the name to `@ChrisVelasco0312/poc-tsconfig` and make it private.
 
 ```json
 {
-  "name": "@poc/tsconfig",
+  "name": "@ChrisVelasco0312/poc-tsconfig",
   "version": "0.0.0",
   "private": true,
   "files": ["react-library.json"]
@@ -191,7 +191,7 @@ Create `packages/config/eslint/package.json`:
 
 ```json
 {
-  "name": "@poc/eslint-config",
+  "name": "@ChrisVelasco0312/poc-eslint-config",
   "version": "0.0.0",
   "private": true,
   "type": "module",

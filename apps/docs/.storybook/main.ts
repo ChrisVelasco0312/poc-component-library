@@ -33,11 +33,11 @@ const config: StorybookConfig = {
       },
       resolve: {
         alias: {
-          "@poc/button": path.resolve(
+          "@ChrisVelasco0312/poc-ui-button": path.resolve(
             __dirname,
             "../../../packages/button/src/index.ts",
           ),
-          "@poc/themes": path.resolve(
+          "@ChrisVelasco0312/poc-ui-themes": path.resolve(
             __dirname,
             "../../../packages/themes/index.ts",
           ),

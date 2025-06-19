@@ -1,5 +1,5 @@
 {
-  "name": "@poc/components",
+  "name": "@ChrisVelasco0312/poc-ui-components",
   "version": "0.1.0",
   "description": "Complete POC component library",
   "type": "module",
@@ -43,11 +43,11 @@
     "registry": "https://npm.pkg.github.com"
   },
   "dependencies": {
-    "@poc/button": "workspace:*"
+    "@ChrisVelasco0312/poc-ui-button": "workspace:*"
   },
   "devDependencies": {
-    "@poc/tsconfig": "workspace:*",
-    "@poc/eslint-config": "workspace:*",
+    "@ChrisVelasco0312/poc-tsconfig": "workspace:*",
+    "@ChrisVelasco0312/poc-eslint-config": "workspace:*",
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "^5.8.3",
     "vite": "^6.0.1",

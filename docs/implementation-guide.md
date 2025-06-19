@@ -152,11 +152,11 @@ This is a key monorepo pattern. We define configs once and extend them in our pa
     pnpm init
     ```
 
-    In `packages/config/tsconfig/package.json`, set the name to `@poc/tsconfig` and make it private.
+    In `packages/config/tsconfig/package.json`, set the name to `@ChrisVelasco0312/poc-tsconfig` and make it private.
 
     ```json
     {
-      "name": "@poc/tsconfig",
+      "name": "@ChrisVelasco0312/poc-tsconfig",
       "version": "0.0.0",
       "private": true,
       "files": ["react-library.json"]
@@ -204,7 +204,7 @@ This is a key monorepo pattern. We define configs once and extend them in our pa
 
     ```json
     {
-      "name": "@poc/eslint-config",
+      "name": "@ChrisVelasco0312/poc-eslint-config",
       "version": "0.0.0",
       "private": true,
       "type": "module",
@@ -305,7 +305,7 @@ Run `pnpm init`. Then, edit the generated `package.json` to look like this. **Pa
 ```json
 // packages/components/button/package.json
 {
-  "name": "@poc/button",
+  "name": "@ChrisVelasco0312/poc-ui-button",
   "version": "0.0.0",
   "description": "A simple button component",
   "type": "module",
@@ -344,8 +344,8 @@ Run `pnpm init`. Then, edit the generated `package.json` to look like this. **Pa
     "registry": "https://npm.pkg.github.com/"
   },
   "devDependencies": {
-    "@poc/tsconfig": "workspace:*",
-    "@poc/eslint-config": "workspace:*",
+    "@ChrisVelasco0312/poc-tsconfig": "workspace:*",
+    "@ChrisVelasco0312/poc-eslint-config": "workspace:*",
     "@vitejs/plugin-react": "^4.3.4",
     "vite": "^6.0.1",
     "vite-plugin-dts": "^3.0.0",
@@ -374,8 +374,8 @@ Manually add the workspace dependencies to package.json:
 {
   // ... other fields
   "devDependencies": {
-    "@poc/tsconfig": "workspace:*",
-    "@poc/eslint-config": "workspace:*",
+    "@ChrisVelasco0312/poc-tsconfig": "workspace:*",
+    "@ChrisVelasco0312/poc-eslint-config": "workspace:*",
     "@vitejs/plugin-react": "^4.3.4",
     "vite": "^6.0.1",
     "vite-plugin-dts": "^3.0.0",
@@ -418,7 +418,7 @@ Create `packages/components/button/tsconfig.json`. **Note: Use standalone config
 Create `packages/components/button/eslint.config.js`:
 
 ```javascript
-import config from "@poc/eslint-config/react-library.js";
+import config from "@ChrisVelasco0312/poc-eslint-config/react-library.js";
 
 export default [
   ...config,
@@ -538,9 +538,9 @@ Go to the root of the monorepo (`cd ../../..`) and run:
 
 ```bash
 # Test build
-pnpm --filter @poc/button build
+pnpm --filter @ChrisVelasco0312/poc-ui-button build
 # OR using Turborepo
-npx turbo build --filter=@poc/button
+npx turbo build --filter=@ChrisVelasco0312/poc-ui-button
 
 # Test linting
 pnpm lint
@@ -601,7 +601,7 @@ Edit `apps/docs/package.json` to include your component packages and clean up un
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@poc/button": "workspace:*",
+    "@ChrisVelasco0312/poc-ui-button": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -645,7 +645,7 @@ This is a **critical** step to ensure that when you edit a component in `package
         return mergeConfig(config, {
           resolve: {
             alias: {
-              "@poc/button": path.resolve(
+              "@ChrisVelasco0312/poc-ui-button": path.resolve(
                 __dirname,
                 "../../../packages/components/button/src/index.ts",
               ),
@@ -699,7 +699,7 @@ This is a **critical** step to ensure that when you edit a component in `package
 
    ```tsx
    import type { Meta, StoryObj } from "@storybook/react-vite";
-   import { Button } from "@poc/button";
+   import { Button } from "@ChrisVelasco0312/poc-ui-button";
 
    const meta: Meta<typeof Button> = {
      title: "Components/Button",
@@ -774,7 +774,7 @@ When prompted, select `Vite` as the builder. This will install all necessary Sto
 Let's adjust the `docs` package to be a pure documentation app.
 
 1.  **Modify `apps/docs/package.json`**:
-    Add your `@poc/button` as a dependency. We also need `vite` and `globals` for our Storybook configuration.
+    Add your `@ChrisVelasco0312/poc-ui-button` as a dependency. We also need `vite` and `globals` for our Storybook configuration.
 
     ```json
     {
@@ -787,7 +787,7 @@ Let's adjust the `docs` package to be a pure documentation app.
         "build-storybook": "storybook build"
       },
       "dependencies": {
-        "@poc/button": "workspace:*",
+        "@ChrisVelasco0312/poc-ui-button": "workspace:*",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
       },
@@ -836,7 +836,7 @@ This is a **critical** step to ensure that when you edit a component in `package
         return mergeConfig(config, {
           resolve: {
             alias: {
-              "@poc/button": path.resolve(
+              "@ChrisVelasco0312/poc-ui-button": path.resolve(
                 __dirname,
                 "../../../packages/components/button/src/index.ts",
               ),
@@ -873,7 +873,7 @@ Create `apps/docs/src/stories/Button.stories.tsx`:
 
 ```tsx
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button } from "@poc/button";
+import { Button } from "@ChrisVelasco0312/poc-ui-button";
 
 const meta: Meta<typeof Button> = {
   title: "Components/Button",
@@ -1105,8 +1105,8 @@ export const Button = ({ variant = 'primary', children, className, ...props }: B
 - Wrap your app (or Storybook preview) with `ThemeProvider` and pass a theme:
 
   ```tsx
-  import { ThemeProvider } from "@poc/themes/utils/ThemeProvider";
-  import { atixTheme } from "@poc/themes/default/atix";
+  import { ThemeProvider } from "@ChrisVelasco0312/poc-ui-themes/utils/ThemeProvider";
+  import { atixTheme } from "@ChrisVelasco0312/poc-ui-themes/default/atix";
 
   <ThemeProvider theme={atixTheme}>
     <App />
@@ -1123,7 +1123,7 @@ export const Button = ({ variant = 'primary', children, className, ...props }: B
 
 **a. Export Default Themes**
 
-- Export all default themes from `@poc/themes` for easy import:
+- Export all default themes from `@ChrisVelasco0312/poc-ui-themes` for easy import:
   ```ts
   export { atixTheme } from "./default/atix";
   export { bancoWTheme } from "./default/banco-w";
@@ -1135,7 +1135,7 @@ export const Button = ({ variant = 'primary', children, className, ...props }: B
 - In your docs, show how to import and use a default theme:
 
   ```tsx
-  import { ThemeProvider, atixTheme } from "@poc/themes";
+  import { ThemeProvider, atixTheme } from "@ChrisVelasco0312/poc-ui-themes";
 
   <ThemeProvider theme={atixTheme}>...</ThemeProvider>;
   ```
@@ -1170,9 +1170,9 @@ If you are using this component library in your own application and want to appl
 ### 1. **Install the Library**
 
 ```bash
-pnpm add @poc/button @poc/themes
+pnpm add @ChrisVelasco0312/poc-ui-button @ChrisVelasco0312/poc-ui-themes
 # or
-npm install @poc/button @poc/themes
+npm install @ChrisVelasco0312/poc-ui-button @ChrisVelasco0312/poc-ui-themes
 ```
 
 ### 2. **Create Your Theme Object in Your App**
@@ -1181,7 +1181,7 @@ In your application codebase (not in the library), define your theme object matc
 
 ```ts
 // src/theme/myTheme.ts
-import type { Theme } from "@poc/themes";
+import type { Theme } from "@ChrisVelasco0312/poc-ui-themes";
 
 export const myTheme: Theme = {
   colors: {
@@ -1266,7 +1266,7 @@ export const myTheme: Theme = {
 In your app's root (e.g., `App.tsx` or `main.tsx`):
 
 ```tsx
-import { ThemeProvider } from "@poc/themes";
+import { ThemeProvider } from "@ChrisVelasco0312/poc-ui-themes";
 import { myTheme } from "./theme/myTheme";
 
 function App() {
@@ -1321,11 +1321,11 @@ my-app/
 
 ## **Phase 7: Creating the Unified Components Package**
 
-This phase creates a unified `@poc/components` package that bundles all individual components and themes, enabling users to install the complete library with a single package.
+This phase creates a unified `@ChrisVelasco0312/poc-ui-components` package that bundles all individual components and themes, enabling users to install the complete library with a single package.
 
 ### **Why Create a Unified Package?**
 
-- **Simplified Installation**: Users can install `@poc/components @poc/themes` instead of multiple individual packages
+- **Simplified Installation**: Users can install `@ChrisVelasco0312/poc-ui-components @ChrisVelasco0312/poc-ui-themes` instead of multiple individual packages
 - **Better Developer Experience**: Single import source for all components
 - **Easier Version Management**: All components versioned together
 - **Reduced Bundle Configuration**: Fewer dependencies to manage
@@ -1346,7 +1346,7 @@ Create `packages/components/package.json`:
 
 ```json
 {
-  "name": "@poc/components",
+  "name": "@ChrisVelasco0312/poc-ui-components",
   "version": "0.0.0",
   "description": "Complete POC component library",
   "type": "module",
@@ -1390,11 +1390,11 @@ Create `packages/components/package.json`:
     "registry": "https://npm.pkg.github.com"
   },
   "dependencies": {
-    "@poc/button": "workspace:*"
+    "@ChrisVelasco0312/poc-ui-button": "workspace:*"
   },
   "devDependencies": {
-    "@poc/tsconfig": "workspace:*",
-    "@poc/eslint-config": "workspace:*",
+    "@ChrisVelasco0312/poc-tsconfig": "workspace:*",
+    "@ChrisVelasco0312/poc-eslint-config": "workspace:*",
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "^5.8.3",
     "vite": "^6.0.1",
@@ -1412,7 +1412,7 @@ Create `packages/components/tsconfig.json`:
 
 ```json
 {
-  "extends": "@poc/tsconfig/react-library.json",
+  "extends": "@ChrisVelasco0312/poc-tsconfig/react-library.json",
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src"
@@ -1434,7 +1434,7 @@ Create `packages/components/tsconfig.json`:
 Create `packages/components/eslint.config.js`:
 
 ```javascript
-import config from "@poc/eslint-config/react-library.js";
+import config from "@ChrisVelasco0312/poc-eslint-config/react-library.js";
 
 export default [
   ...config,
@@ -1483,7 +1483,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@poc/button": resolve(__dirname, "../button/src"),
+      "@ChrisVelasco0312/poc-ui-button": resolve(__dirname, "../button/src"),
     },
   },
 });
@@ -1495,11 +1495,11 @@ Create `packages/components/src/index.ts`:
 
 ```typescript
 // Re-export all individual components
-export * from '@poc/button';
+export * from '@ChrisVelasco0312/poc-ui-button';
 
 // You can also create convenience exports
-export { Button } from '@poc/button';
-export type { ButtonProps } from '@poc/button';
+export { Button } from '@ChrisVelasco0312/poc-ui-button';
+export type { ButtonProps } from '@ChrisVelasco0312/poc-ui-button';
 
 // Future components will be added here:
 // export * from '@poc/input';
@@ -1512,21 +1512,21 @@ export type { ButtonProps } from '@poc/button';
 Create `packages/components/README.md`:
 
 ```markdown
-# @poc/components
+# @ChrisVelasco0312/poc-ui-components
 
 Complete component library for POC project.
 
 ## Installation
 
 ```bash
-npm install @poc/components @poc/themes
+npm install @ChrisVelasco0312/poc-ui-components @ChrisVelasco0312/poc-ui-themes
 ```
 
 ## Usage
 
 ```tsx
-import { Button } from '@poc/components';
-import { ThemeProvider, atixTheme } from '@poc/themes';
+import { Button } from '@ChrisVelasco0312/poc-ui-components';
+import { ThemeProvider, atixTheme } from '@ChrisVelasco0312/poc-ui-themes';
 
 function App() {
   return (
@@ -1544,7 +1544,7 @@ function App() {
 ## Requirements
 
 - React 19.1.0 or later
-- @poc/themes for full theming functionality
+- @ChrisVelasco0312/poc-ui-themes for full theming functionality
 
 ## Development
 
@@ -1600,10 +1600,10 @@ cd ../..
 pnpm install
 
 # Build the individual components first
-pnpm --filter @poc/button build
+pnpm --filter @ChrisVelasco0312/poc-ui-button build
 
 # Build the unified package
-pnpm --filter @poc/components build
+pnpm --filter @ChrisVelasco0312/poc-ui-components build
 
 # Verify everything builds successfully
 pnpm build
@@ -1624,8 +1624,8 @@ Update `apps/docs/package.json` to use the unified package:
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@poc/components": "workspace:*",
-    "@poc/themes": "workspace:*",
+    "@ChrisVelasco0312/poc-ui-components": "workspace:*",
+    "@ChrisVelasco0312/poc-ui-themes": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -1643,11 +1643,11 @@ async viteFinal(config) {
   return mergeConfig(config, {
     resolve: {
       alias: {
-        "@poc/components": path.resolve(
+        "@ChrisVelasco0312/poc-ui-components": path.resolve(
           __dirname,
           "../../../packages/components/src/index.ts",
         ),
-        "@poc/themes": path.resolve(
+        "@ChrisVelasco0312/poc-ui-themes": path.resolve(
           __dirname,
           "../../../packages/themes/src/index.ts",
         ),
@@ -1662,7 +1662,7 @@ Update your stories to use the unified package:
 ```tsx
 // apps/docs/src/stories/Button.stories.tsx
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "@poc/components"; // Changed from @poc/button
+import { Button } from "@ChrisVelasco0312/poc-ui-components"; // Changed from @ChrisVelasco0312/poc-ui-button
 
 const meta: Meta<typeof Button> = {
   title: "Components/Button",
@@ -1714,21 +1714,21 @@ When adding new components, follow this pattern:
    ```json
    {
      "dependencies": {
-       "@poc/button": "workspace:*",
+       "@ChrisVelasco0312/poc-ui-button": "workspace:*",
        "@poc/input": "workspace:*"
      }
    }
    ```
 3. **Export it** in `packages/components/src/index.ts`:
    ```typescript
-   export * from '@poc/button';
+   export * from '@ChrisVelasco0312/poc-ui-button';
    export * from '@poc/input';
    ```
 4. **Update the Vite alias** in `packages/components/vite.config.ts`:
    ```typescript
    resolve: {
      alias: {
-       "@poc/button": resolve(__dirname, "../button/src"),
+       "@ChrisVelasco0312/poc-ui-button": resolve(__dirname, "../button/src"),
        "@poc/input": resolve(__dirname, "../input/src"),
      },
    },
@@ -1767,7 +1767,7 @@ First, configure npm to use GitHub Package Registry for your scope:
 
 ```bash
 # .npmrc
-@poc:registry=https://npm.pkg.github.com
+@ChrisVelasco0312:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 registry=https://registry.npmjs.org/
 ```
@@ -2083,7 +2083,7 @@ Users of your library need to authenticate with GitHub Package Registry:
 
 ```bash
 # Create or update ~/.npmrc
-echo "@poc:registry=https://npm.pkg.github.com" >> ~/.npmrc
+echo "@ChrisVelasco0312:registry=https://npm.pkg.github.com" >> ~/.npmrc
 echo "//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN" >> ~/.npmrc
 ```
 
@@ -2093,7 +2093,7 @@ Create `.npmrc` in the consuming project:
 
 ```bash
 # .npmrc in the consuming project
-@poc:registry=https://npm.pkg.github.com
+@ChrisVelasco0312:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 ```
 
@@ -2105,16 +2105,16 @@ Install all packages for full functionality:
 
 ```bash
 # Install complete component library (when unified package exists)
-npm install @poc/components @poc/themes
+npm install @ChrisVelasco0312/poc-ui-components @ChrisVelasco0312/poc-ui-themes
 
 # Or with pnpm
-pnpm add @poc/components @poc/themes
+pnpm add @ChrisVelasco0312/poc-ui-components @ChrisVelasco0312/poc-ui-themes
 
 # Or with yarn
-yarn add @poc/components @poc/themes
+yarn add @ChrisVelasco0312/poc-ui-components @ChrisVelasco0312/poc-ui-themes
 
 # Current Reality: Install individual components
-npm install @poc/button @poc/themes
+npm install @ChrisVelasco0312/poc-ui-button @ChrisVelasco0312/poc-ui-themes
 ```
 
 #### **Option B: Install Individual Packages**
@@ -2123,26 +2123,26 @@ Install only what you need for more granular control:
 
 ```bash
 # Install individual components (current structure)
-npm install @poc/button
+npm install @ChrisVelasco0312/poc-ui-button
 
 # Install only themes (for custom implementations)
-npm install @poc/themes
+npm install @ChrisVelasco0312/poc-ui-themes
 
 # Install specific configuration packages
-npm install @poc/tsconfig @poc/eslint-config
+npm install @ChrisVelasco0312/poc-tsconfig @ChrisVelasco0312/poc-eslint-config
 
 # Mix and match based on your needs
-npm install @poc/button @poc/themes @poc/tsconfig
+npm install @ChrisVelasco0312/poc-ui-button @ChrisVelasco0312/poc-ui-themes @ChrisVelasco0312/poc-tsconfig
 ```
 
 #### **Package Dependencies and Compatibility**
 
 | Package | Dependencies | Use Case |
 |---------|-------------|----------|
-| `@poc/button` | None (peer deps: React, React-DOM) | Button component with theme integration |
-| `@poc/themes` | React (peer dependency) | Theme definitions and ThemeProvider |
-| `@poc/tsconfig` | None | TypeScript configuration |
-| `@poc/eslint-config` | ESLint plugins | Linting configuration |
+| `@ChrisVelasco0312/poc-ui-button` | None (peer deps: React, React-DOM) | Button component with theme integration |
+| `@ChrisVelasco0312/poc-ui-themes` | React (peer dependency) | Theme definitions and ThemeProvider |
+| `@ChrisVelasco0312/poc-tsconfig` | None | TypeScript configuration |
+| `@ChrisVelasco0312/poc-eslint-config` | ESLint plugins | Linting configuration |
 
 **Important Notes:**
 - **Components package** works standalone but requires a theme context for full functionality
@@ -2155,11 +2155,11 @@ npm install @poc/button @poc/themes @poc/tsconfig
 
 ```typescript
 // src/lib/components.ts
-import { ThemeProvider } from '@poc/themes';
-import { atixTheme } from '@poc/themes';
+import { ThemeProvider } from '@ChrisVelasco0312/poc-ui-themes';
+import { atixTheme } from '@ChrisVelasco0312/poc-ui-themes';
 
 // Re-export components for easier imports
-export * from '@poc/button';
+export * from '@ChrisVelasco0312/poc-ui-button';
 export { ThemeProvider, atixTheme };
 ```
 
@@ -2211,8 +2211,8 @@ Add to `next.config.js`:
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: [
-    '@poc/components',
-    '@poc/themes'
+    '@ChrisVelasco0312/poc-ui-components',
+    '@ChrisVelasco0312/poc-ui-themes'
   ],
   experimental: {
     externalDir: true
@@ -2235,8 +2235,8 @@ npm update vite @vitejs/plugin-react
 **1. Complete Library Usage (Components + Themes):**
 
 ```tsx
-import { Button } from '@poc/button';
-import { ThemeProvider, atixTheme } from '@poc/themes';
+import { Button } from '@ChrisVelasco0312/poc-ui-button';
+import { ThemeProvider, atixTheme } from '@ChrisVelasco0312/poc-ui-themes';
 
 function MyApp() {
   return (
@@ -2251,10 +2251,10 @@ function MyApp() {
 
 **2. Components Only (Custom Theme Implementation):**
 
-If you only install `@poc/button` and want to implement your own theming:
+If you only install `@ChrisVelasco0312/poc-ui-button` and want to implement your own theming:
 
 ```tsx
-import { Button } from '@poc/button';
+import { Button } from '@ChrisVelasco0312/poc-ui-button';
 import { createTheme, ThemeProvider } from '@mui/material/styles'; // Example with MUI
 
 const customTheme = createTheme({
@@ -2274,10 +2274,10 @@ function MyApp() {
 
 **3. Themes Only (Custom Components):**
 
-If you only install `@poc/themes` to use with your own components:
+If you only install `@ChrisVelasco0312/poc-ui-themes` to use with your own components:
 
 ```tsx
-import { ThemeProvider, atixTheme, useTheme } from '@poc/themes';
+import { ThemeProvider, atixTheme, useTheme } from '@ChrisVelasco0312/poc-ui-themes';
 
 // Your custom component using the theme
 function CustomButton({ children, ...props }) {
@@ -2309,8 +2309,8 @@ function App() {
 
 ```tsx
 import { useState } from 'react';
-import { ThemeProvider, atixTheme, bancoWTheme } from '@poc/themes';
-import { Button } from '@poc/button';
+import { ThemeProvider, atixTheme, bancoWTheme } from '@ChrisVelasco0312/poc-ui-themes';
+import { Button } from '@ChrisVelasco0312/poc-ui-button';
 
 function App() {
   const [currentTheme, setCurrentTheme] = useState(atixTheme);
@@ -2336,11 +2336,11 @@ Choose your installation approach based on your project needs:
 
 | Scenario | Recommended Installation | Reason |
 |----------|-------------------------|---------|
-| **New project starting from scratch** | Complete library (`@poc/button @poc/themes`) | Full functionality, consistent theming |
-| **Existing project with established design system** | Components only (`@poc/button`) | Integrate with existing theme system |
-| **Building custom components with library themes** | Themes only (`@poc/themes`) | Reuse theme system, custom component implementation |
+| **New project starting from scratch** | Complete library (`@ChrisVelasco0312/poc-ui-button @ChrisVelasco0312/poc-ui-themes`) | Full functionality, consistent theming |
+| **Existing project with established design system** | Components only (`@ChrisVelasco0312/poc-ui-button`) | Integrate with existing theme system |
+| **Building custom components with library themes** | Themes only (`@ChrisVelasco0312/poc-ui-themes`) | Reuse theme system, custom component implementation |
 | **Large project with selective usage** | Individual packages as needed | Minimize bundle size, use only required features |
-| **Development/build tooling** | Config packages (`@poc/tsconfig @poc/eslint-config`) | Consistent development experience |
+| **Development/build tooling** | Config packages (`@ChrisVelasco0312/poc-tsconfig @ChrisVelasco0312/poc-eslint-config`) | Consistent development experience |
 
 #### **Migration Paths Between Installation Options**
 
@@ -2348,22 +2348,22 @@ Choose your installation approach based on your project needs:
 
 ```bash
 # Add themes package
-npm install @poc/themes
+npm install @ChrisVelasco0312/poc-ui-themes
 
 # Update your imports
 - import { createTheme } from './utils/theme';
-+ import { ThemeProvider, atixTheme } from '@poc/themes';
++ import { ThemeProvider, atixTheme } from '@ChrisVelasco0312/poc-ui-themes';
 ```
 
 **From Complete Library to Components-Only:**
 
 ```bash
 # Remove themes package
-npm uninstall @poc/themes
+npm uninstall @ChrisVelasco0312/poc-ui-themes
 
 # Implement custom theming
 + import { createTheme } from './utils/theme';
-- import { ThemeProvider, atixTheme } from '@poc/themes';
+- import { ThemeProvider, atixTheme } from '@ChrisVelasco0312/poc-ui-themes';
 ```
 
 ### **Phase 5: Maintenance and Updates**
@@ -2391,13 +2391,13 @@ git push origin feature/new-component
 
 ```bash
 # Check for updates
-npm outdated @poc/button @poc/themes
+npm outdated @ChrisVelasco0312/poc-ui-button @ChrisVelasco0312/poc-ui-themes
 
 # Update to latest versions
-npm update @poc/button @poc/themes
+npm update @ChrisVelasco0312/poc-ui-button @ChrisVelasco0312/poc-ui-themes
 
 # Or update to specific version
-npm install @poc/button@1.2.0
+npm install @ChrisVelasco0312/poc-ui-button@1.2.0
 ```
 
 #### **Breaking Changes Management**
@@ -2470,7 +2470,7 @@ Before each release, ensure:
 3. **Version Conflicts:**
    ```bash
    # Check existing versions
-   npm view @poc/button versions --json
+   npm view @ChrisVelasco0312/poc-ui-button versions --json
    ```
 
 4. **Build Failures:**

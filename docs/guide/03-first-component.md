@@ -18,7 +18,7 @@ Run `pnpm init`. Then, edit the generated `package.json` to look like this. **Pa
 
 ```json
 {
-  "name": "@poc/button",
+  "name": "@ChrisVelasco0312/poc-ui-button",
   "version": "0.0.0",
   "description": "A simple button component",
   "type": "module",
@@ -57,8 +57,8 @@ Run `pnpm init`. Then, edit the generated `package.json` to look like this. **Pa
     "registry": "https://npm.pkg.github.com/"
   },
   "devDependencies": {
-    "@poc/tsconfig": "workspace:*",
-    "@poc/eslint-config": "workspace:*",
+    "@ChrisVelasco0312/poc-tsconfig": "workspace:*",
+    "@ChrisVelasco0312/poc-eslint-config": "workspace:*",
     "@vitejs/plugin-react": "^4.3.4",
     "vite": "^6.0.1",
     "vite-plugin-dts": "^3.0.0",
@@ -114,7 +114,7 @@ Create `packages/button/tsconfig.json`. **Note: Use standalone config to avoid p
 Create `packages/button/eslint.config.js`:
 
 ```javascript
-import config from "@poc/eslint-config/react-library.js";
+import config from "@ChrisVelasco0312/poc-eslint-config/react-library.js";
 
 export default [
   ...config,
@@ -296,9 +296,9 @@ Go to the root of the monorepo (`cd ../../..`) and run:
 
 ```bash
 # Test build
-pnpm --filter @poc/button build
+pnpm --filter @ChrisVelasco0312/poc-ui-button build
 # OR using Turborepo
-npx turbo build --filter=@poc/button
+npx turbo build --filter=@ChrisVelasco0312/poc-ui-button
 
 # Test linting
 pnpm lint
@@ -308,7 +308,7 @@ You should see a new `dist` folder inside `packages/button` containing the bundl
 
 ## What We've Built
 
-- ✅ **Standalone Component Package**: `@poc/button` can be installed independently
+- ✅ **Standalone Component Package**: `@ChrisVelasco0312/poc-ui-button` can be installed independently
 - ✅ **Theme Integration**: Uses CSS custom properties with fallback values
 - ✅ **TypeScript Support**: Full type definitions and IntelliSense
 - ✅ **Modern Build**: ESM + UMD builds with Vite

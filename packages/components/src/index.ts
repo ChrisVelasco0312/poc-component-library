@@ -1,9 +1,9 @@
 // Re-export all individual components
-export * from '@poc/button';
+export * from '@ChrisVelasco0312/poc-ui-button';
 
 // You can also create convenience exports
-export { Button } from '@poc/button';
-export type { ButtonProps } from '@poc/button';
+export { Button } from '@ChrisVelasco0312/poc-ui-button';
+export type { ButtonProps } from '@ChrisVelasco0312/poc-ui-button';
 
 // Future components will be added here:
 // export * from '@poc/input';

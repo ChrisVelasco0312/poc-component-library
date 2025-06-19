@@ -58,7 +58,7 @@ Edit `apps/docs/package.json` to include your component packages and clean up un
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@poc/button": "workspace:*",
+    "@ChrisVelasco0312/poc-ui-button": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -104,7 +104,7 @@ const config: StorybookConfig = {
     return mergeConfig(config, {
       resolve: {
         alias: {
-          "@poc/button": path.resolve(
+          "@ChrisVelasco0312/poc-ui-button": path.resolve(
             __dirname,
             "../../../packages/button/src/index.ts",
           ),
@@ -184,7 +184,7 @@ Create `apps/docs/src/stories/Button.stories.tsx`:
 
 ```tsx
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "@poc/button";
+import { Button } from "@ChrisVelasco0312/poc-ui-button";
 
 const meta: Meta<typeof Button> = {
   title: "Components/Button",

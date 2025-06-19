@@ -19,7 +19,7 @@ Create/Update `.npmrc` in your project root:
 
 ```bash
 # .npmrc
-@poc:registry=https://npm.pkg.github.com
+@ChrisVelasco0312:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 registry=https://registry.npmjs.org/
 ```
@@ -274,7 +274,7 @@ Create `.npmrc` in the consuming project:
 
 ```bash
 # .npmrc in the consuming project
-@poc:registry=https://npm.pkg.github.com
+@ChrisVelasco0312:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 ```
 
@@ -284,35 +284,35 @@ Create `.npmrc` in the consuming project:
 
 ```bash
 # Install complete component library
-npm install @poc/components @poc/themes
+npm install @ChrisVelasco0312/poc-ui-components @ChrisVelasco0312/poc-ui-themes
 # or
-pnpm add @poc/components @poc/themes
+pnpm add @ChrisVelasco0312/poc-ui-components @ChrisVelasco0312/poc-ui-themes
 # or
-yarn add @poc/components @poc/themes
+yarn add @ChrisVelasco0312/poc-ui-components @ChrisVelasco0312/poc-ui-themes
 ```
 
 #### Option B: Install Individual Packages
 
 ```bash
 # Install individual components
-npm install @poc/button @poc/themes
+npm install @ChrisVelasco0312/poc-ui-button @ChrisVelasco0312/poc-ui-themes
 
 # Install only themes (for custom implementations)
-npm install @poc/themes
+npm install @ChrisVelasco0312/poc-ui-themes
 
 # Install configuration packages
-npm install @poc/tsconfig @poc/eslint-config
+npm install @ChrisVelasco0312/poc-tsconfig @ChrisVelasco0312/poc-eslint-config
 ```
 
 ### Package Dependencies and Compatibility
 
 | Package | Dependencies | Use Case |
 |---------|-------------|----------|
-| `@poc/components` | All component packages | Complete library installation |
-| `@poc/button` | None (peer deps: React) | Individual button component |
-| `@poc/themes` | React (peer dependency) | Theme system and providers |
-| `@poc/tsconfig` | None | TypeScript configuration |
-| `@poc/eslint-config` | ESLint plugins | Linting configuration |
+| `@ChrisVelasco0312/poc-ui-components` | All component packages | Complete library installation |
+| `@ChrisVelasco0312/poc-ui-button` | None (peer deps: React) | Individual button component |
+| `@ChrisVelasco0312/poc-ui-themes` | React (peer dependency) | Theme system and providers |
+| `@ChrisVelasco0312/poc-tsconfig` | None | TypeScript configuration |
+| `@ChrisVelasco0312/poc-eslint-config` | ESLint plugins | Linting configuration |
 
 ### Framework-Specific Setup
 
@@ -324,8 +324,8 @@ Add to `next.config.js`:
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: [
-    '@poc/components',
-    '@poc/themes'
+    '@ChrisVelasco0312/poc-ui-components',
+    '@ChrisVelasco0312/poc-ui-themes'
   ],
   experimental: {
     externalDir: true
@@ -363,8 +363,8 @@ npm update vite @vitejs/plugin-react
 **Complete Library Usage:**
 
 ```tsx
-import { Button } from '@poc/components';
-import { ThemeProvider, atixTheme } from '@poc/themes';
+import { Button } from '@ChrisVelasco0312/poc-ui-components';
+import { ThemeProvider, atixTheme } from '@ChrisVelasco0312/poc-ui-themes';
 
 function MyApp() {
   return (
@@ -380,8 +380,8 @@ function MyApp() {
 **Individual Components:**
 
 ```tsx
-import { Button } from '@poc/button';
-import { ThemeProvider, atixTheme } from '@poc/themes';
+import { Button } from '@ChrisVelasco0312/poc-ui-button';
+import { ThemeProvider, atixTheme } from '@ChrisVelasco0312/poc-ui-themes';
 
 function MyApp() {
   return (
@@ -398,8 +398,8 @@ function MyApp() {
 
 ```tsx
 import { useState } from 'react';
-import { ThemeProvider, atixTheme, bancoWTheme } from '@poc/themes';
-import { Button } from '@poc/components';
+import { ThemeProvider, atixTheme, bancoWTheme } from '@ChrisVelasco0312/poc-ui-themes';
+import { Button } from '@ChrisVelasco0312/poc-ui-components';
 
 function App() {
   const [currentTheme, setCurrentTheme] = useState(atixTheme);
@@ -441,13 +441,13 @@ git push origin feature/new-component
 
 ```bash
 # Check for updates
-npm outdated @poc/components @poc/themes
+npm outdated @ChrisVelasco0312/poc-ui-components @ChrisVelasco0312/poc-ui-themes
 
 # Update to latest versions
-npm update @poc/components @poc/themes
+npm update @ChrisVelasco0312/poc-ui-components @ChrisVelasco0312/poc-ui-themes
 
 # Or update to specific version
-npm install @poc/components@1.2.0
+npm install @ChrisVelasco0312/poc-ui-components@1.2.0
 ```
 
 ### Breaking Changes Management
@@ -490,7 +490,7 @@ npm whoami --registry=https://npm.pkg.github.com
 **Version Conflicts:**
 ```bash
 # Check existing versions
-npm view @poc/components versions --json
+npm view @ChrisVelasco0312/poc-ui-components versions --json
 ```
 
 **Build Failures:**

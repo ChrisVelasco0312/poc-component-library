@@ -39,7 +39,7 @@ pnpm storybook
 
 ## 📦 Components
 
-### Button Component (`@poc/button`)
+### Button Component (`@ChrisVelasco0312/poc-ui-button`)
 
 A simple, customizable button component with TypeScript support.
 
@@ -53,7 +53,7 @@ A simple, customizable button component with TypeScript support.
 **Usage:**
 
 ```tsx
-import { Button } from "@poc/button";
+import { Button } from "@ChrisVelasco0312/poc-ui-button";
 
 <Button variant="primary" onClick={() => alert("Hello!")}>
   Click me
@@ -109,7 +109,7 @@ its source code.
           return mergeConfig(config, {
             resolve: {
               alias: {
-                '@poc/button': path.resolve(
+                '@ChrisVelasco0312/poc-ui-button': path.resolve(
                   __dirname,
                   '../../../packages/components/button/src/index.ts'
                 ),
@@ -123,7 +123,7 @@ its source code.
     `devDependencies` to use `mergeConfig`.
 3.  **Remove incorrect CSS imports:** Ensure `apps/docs/.storybook/preview.ts`
     does **not** import any component CSS files (e.g.,
-    `@poc/button/dist/button.css`). Components are responsible for importing their
+    `@ChrisVelasco0312/poc-ui-button/dist/button.css`). Components are responsible for importing their
     own styles directly in their `index.ts` file.
 
 ## 🤝 Contributing

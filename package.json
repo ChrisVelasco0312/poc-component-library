@@ -1,6 +1,6 @@
 {
   "name": "poc-component-library",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "",
   "main": "index.js",
   "packageManager": "pnpm@9.0.0",
@@ -9,7 +9,7 @@
     "build:packages": "npx turbo build --filter='./packages/*'",
     "publish:prepare": "pnpm build:packages",
     "publish:all": "pnpm changeset publish",
-    "version": "pnpm changeset version",
+    "version": "0.0.0",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "storybook": "pnpm --filter docs storybook",

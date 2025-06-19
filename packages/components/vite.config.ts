@@ -32,7 +32,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@poc/button": resolve(__dirname, "../button/src"),
+      "@ChrisVelasco0312/poc-ui-button": resolve(__dirname, "../button/src"),
       // Future components will be added here:
       // "@poc/input": resolve(__dirname, "../input/src"),
     },

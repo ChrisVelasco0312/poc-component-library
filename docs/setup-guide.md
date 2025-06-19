@@ -27,7 +27,7 @@ pnpm storybook
 pnpm lint
 
 # Build specific package
-pnpm --filter @poc/button build
+pnpm --filter @ChrisVelasco0312/poc-ui-button build
 ```
 
 ## Publishing
@@ -72,8 +72,8 @@ pnpm publish --filter @your-scope/your-component
      "module": "./dist/your-component.es.js",
      "types": "./dist/index.d.ts",
      "devDependencies": {
-       "@poc/tsconfig": "workspace:*",
-       "@poc/eslint-config": "workspace:*"
+       "@ChrisVelasco0312/poc-tsconfig": "workspace:*",
+       "@ChrisVelasco0312/poc-eslint-config": "workspace:*"
      }
    }
    ```
