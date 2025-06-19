@@ -518,4 +518,4 @@ Congratulations! You now have a complete, production-ready component library wit
 
 ## Navigation
 
-**[← Previous: Unified Package](./09-unified-package.md)** | **[Back to Index](./index.md)** 
+**[← Previous: Unified Package](./09-unified-package.md)** | **[Next: CSS Bundling & Automatic Styles →](./11-css-bundling-automatic-styles.md)** 

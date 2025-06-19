@@ -4,7 +4,7 @@ A comprehensive, step-by-step guide to building a production-ready component lib
 
 ## Guide Overview
 
-This guide is divided into 10 phases that take you from a blank project to a fully functional, publishable component library:
+This guide is divided into 11 phases that take you from a blank project to a fully functional, publishable component library:
 
 ### 🚀 Getting Started
 - **[Prerequisites](./01-prerequisites.md)** - Required tools and setup
@@ -23,6 +23,7 @@ This guide is divided into 10 phases that take you from a blank project to a ful
 ### 📦 Distribution & Publishing
 - **[Unified Package](./09-unified-package.md)** - Creating a complete library package
 - **[Publishing Strategy](./10-publishing-strategy.md)** - GitHub-based distribution with versioning
+- **[CSS Bundling & Automatic Styles](./11-css-bundling-automatic-styles.md)** - Critical: Ensuring styles load automatically
 
 ## What You'll Build
 
@@ -30,6 +31,7 @@ By the end of this guide, you'll have:
 
 - ✅ **Modern Monorepo**: pnpm + Turborepo + TypeScript
 - ✅ **Component Library**: Reusable React components with proper exports
+- ✅ **Automatic Styling**: CSS loads automatically without manual imports
 - ✅ **Theming System**: CSS custom properties with optional ThemeProvider
 - ✅ **Documentation**: Storybook with hot reloading and auto-generated docs
 - ✅ **Publishing Pipeline**: GitHub Package Registry with automated versioning
