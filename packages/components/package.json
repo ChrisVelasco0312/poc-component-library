@@ -49,6 +49,7 @@
     "@ChrisVelasco0312/poc-tsconfig": "workspace:*",
     "@ChrisVelasco0312/poc-eslint-config": "workspace:*",
     "@vitejs/plugin-react": "^4.3.4",
+    "sass": "^1.89.2",
     "typescript": "^5.8.3",
     "vite": "^6.0.1",
     "vite-plugin-dts": "^4.5.4"
